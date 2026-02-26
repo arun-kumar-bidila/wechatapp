@@ -85,7 +85,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       buttonName: "Sign Up .",
                       onTap: () {
                         if (formKey.currentState!.validate()) {
-                          context.push("/add-bio");
+                          context.push("/add-bio",extra: {
+                            'email':emailController.text.trim(),
+                            'fullName':nameController.text.trim(),
+                            'password':passwordController.text.trim()
+                          });
                         }
                       },
                     ),
