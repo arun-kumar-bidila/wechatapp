@@ -27,4 +27,20 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(Failure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, User>> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await authDatasource.loginUser(
+        email: email,
+        password: password,
+      );
+      return right(response);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

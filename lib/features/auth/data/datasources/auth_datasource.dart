@@ -9,6 +9,11 @@ abstract interface class AuthDatasource {
     required String fullName,
     required String bio,
   });
+
+  Future<UserModel> loginUser({
+    required String email,
+    required String password,
+  });
 }
 
 class AuthDatasourceImpl implements AuthDatasource {
@@ -36,6 +41,27 @@ class AuthDatasourceImpl implements AuthDatasource {
         throw ServerException(response.data["message"]);
       }
       return UserModel.fromJson(response.data["userData"]);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await dio.post(
+        "/api/auth/login",
+        data: {'email': email, 'password': password},
+      );
+
+      if (response.statusCode != 200) {
+        throw ServerException(response.data['message']);
+      }
+
+      return UserModel.fromJson(response.data['userData']);
     } catch (e) {
       throw ServerException(e.toString());
     }
