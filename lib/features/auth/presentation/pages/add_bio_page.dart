@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
+import 'package:wechat/core/utils/material_banner.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
 class AddBioPage extends StatefulWidget {
@@ -38,7 +39,11 @@ class _AddBioPageState extends State<AddBioPage> {
       body: SafeArea(
         child: Center(
           child: BlocConsumer<AuthBloc, AuthState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is AuthUserLoggedIn) {
+                showMaterialbanner(context, "Login Success");
+              }
+            },
             builder: (context, state) {
               if (state is AuthSignUpLoading) {
                 return CircularProgressIndicator();

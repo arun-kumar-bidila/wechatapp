@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:wechat/features/auth/domain/entities/user.dart';
-import 'package:wechat/common/error/exceptions.dart';
-import 'package:wechat/common/error/failure.dart';
+import 'package:wechat/core/error/exceptions.dart';
+import 'package:wechat/core/error/failure.dart';
 import 'package:wechat/features/auth/data/datasources/auth_datasource.dart';
 import 'package:wechat/features/auth/domain/repository/auth_repository.dart';
 

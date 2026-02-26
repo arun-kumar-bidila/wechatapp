@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:wechat/common/error/exceptions.dart';
+import 'package:wechat/core/error/exceptions.dart';
 import 'package:wechat/features/auth/data/models/user_model.dart';
 
 abstract interface class AuthDatasource {

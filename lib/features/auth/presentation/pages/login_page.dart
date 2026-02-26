@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
+import 'package:wechat/core/utils/material_banner.dart';
+import 'package:wechat/core/utils/snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -74,8 +76,10 @@ class _LoginPageState extends State<LoginPage> {
                       buttonName: "Login .",
                       onTap: () {
                         if (formKey.currentState!.validate()) {
-                          
+
                         }
+                       
+                        
                       },
                     ),
                   ),
