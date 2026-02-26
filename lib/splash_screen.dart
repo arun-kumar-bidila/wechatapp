@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: [                
                 SvgPicture.asset("assets/logo.svg", height: 150),
                 SizedBox(height: 24),
                 Text(

@@ -14,9 +14,12 @@ class AppTheme {
     brightness: Brightness.dark,
 
     inputDecorationTheme: InputDecorationTheme(
+      border: _border(),
       enabledBorder: _border(),
       focusedBorder: _border(AppColors.appColor),
       errorBorder: _border(AppColors.errorColor),
+      focusedErrorBorder:  _border(AppColors.errorColor),
+
       contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
     ),
 
@@ -64,9 +67,11 @@ class AppTheme {
     brightness: Brightness.light,
 
     inputDecorationTheme: InputDecorationTheme(
+        border: _border(),
       enabledBorder: _border(),
       focusedBorder: _border(AppColors.appColor),
       errorBorder: _border(AppColors.errorColor),
+     
       contentPadding: EdgeInsets.all(12),
     ),
 

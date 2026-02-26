@@ -16,6 +16,27 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  double _opacity = 0.5;
+
+  void _checkFormValidity() {
+    final isValid =
+        nameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty;
+    setState(() {
+      _opacity = isValid ? 1 : 0.5;
+    });
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,61 +44,78 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsetsGeometry.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset("assets/logo.svg", height: 100),
-                SizedBox(height: 24),
-                Text(
-                  "Sign Up .",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                SizedBox(height: 24),
-                CommonTextField(
-                  controller: nameController,
-                  hintText: "enter your name",
-                  label: "Name",
-                ),
-                SizedBox(height: 24),
-                CommonTextField(
-                  controller: emailController,
-                  hintText: "enter your email",
-                  label: "Email",
-                ),
-                SizedBox(height: 24),
-                CommonTextField(
-                  controller: passwordController,
-                  hintText: "enter your password",
-                  label: "Password",
-                  isObscureText: true,
-                ),
-                SizedBox(height: 24),
-                CommonButton(buttonName: "Sign Up .", onTap: () {}),
-                SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset("assets/logo.svg", height: 100),
+                  SizedBox(height: 24),
+                  Text(
+                    "Sign Up .",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  SizedBox(height: 24),
+                  CommonTextField(
+                    controller: nameController,
+                    hintText: "enter your name",
+                    label: "Name",
+                    onChanged: (value) => _checkFormValidity(),
+                  ),
+                  SizedBox(height: 24),
+                  CommonTextField(
+                    controller: emailController,
+                    hintText: "enter your email",
+                    label: "Email",
+                    onChanged: (value) => _checkFormValidity(),
+                  ),
+                  SizedBox(height: 24),
+                  CommonTextField(
+                    controller: passwordController,
+                    hintText: "enter your password",
+                    label: "Password",
+                    isObscureText: true,
+                    onChanged: (value) => _checkFormValidity(),
+                  ),
+                  SizedBox(height: 24),
+                  AnimatedOpacity(
+                    opacity: _opacity,
+                    duration: Duration(milliseconds: 500),
+                    child: CommonButton(
+                      buttonName: "Sign Up .",
                       onTap: () {
-                        context.push("/login");
+                        if (formKey.currentState!.validate()) {
+                          context.push("/add-bio");
+                        }
                       },
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Already have an account ? ",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          children: [
-                            TextSpan(
-                              text: "Login",
-                              style: Theme.of(context).textTheme.bodyMedium!
-                                  .copyWith(color: AppColors.appColor),
-                            ),
-                          ],
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.push("/login");
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Already have an account ? ",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            children: [
+                              TextSpan(
+                                text: "Login",
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(color: AppColors.appColor),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
