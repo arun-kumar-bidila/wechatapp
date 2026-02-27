@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [                
-                SvgPicture.asset("assets/logo.svg", height: 150),
+                SvgPicture.asset("assets/images/logo.svg", height: 150),
                 SizedBox(height: 24),
                 Text(
                   "We Chat",

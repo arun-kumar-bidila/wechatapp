@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
-import 'package:wechat/core/utils/material_banner.dart';
+import 'package:wechat/core/utils/snackbar.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -43,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthUserLoggedIn) {
-                showMaterialbanner(context, "Login Success");
-                context.go('/home');
+                showSnackabr(context, "SignUp Success");
+                
               }
             },
             buildWhen: (previous, current) =>
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset("assets/logo.svg", height: 100),
+                      SvgPicture.asset("assets/images/logo.svg", height: 100),
                       SizedBox(height: 24),
                       Text(
                         "Login .",

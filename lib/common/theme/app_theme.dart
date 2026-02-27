@@ -27,8 +27,12 @@ class AppTheme {
 
       primary: AppColors.appColor,
       secondary: AppColors.white,
+      surfaceContainer:AppColors.iconBackDarkTheme 
     ),
     iconTheme: IconThemeData(color: AppColors.appColor),
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.backgroundColor,
+    ),
     textTheme: TextTheme(
       titleLarge: TextStyle(
         fontSize: 32,
@@ -78,8 +82,13 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: AppColors.appColor,
       secondary: AppColors.black,
+      surfaceContainer:AppColors.iconBackLightTheme 
     ),
     iconTheme: IconThemeData(color: AppColors.appColor),
+     appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.white,
+    ),
+    
     textTheme: TextTheme(
       titleLarge: TextStyle(
         fontSize: 32,
