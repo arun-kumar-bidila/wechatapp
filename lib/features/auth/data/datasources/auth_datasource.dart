@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wechat/core/error/exceptions.dart';
 import 'package:wechat/features/auth/data/models/user_model.dart';
 
@@ -14,11 +15,14 @@ abstract interface class AuthDatasource {
     required String email,
     required String password,
   });
+
+  Future<UserModel> checkAuth();
 }
 
 class AuthDatasourceImpl implements AuthDatasource {
   final Dio dio;
-  AuthDatasourceImpl(this.dio);
+  final FlutterSecureStorage storage;
+  AuthDatasourceImpl(this.dio, this.storage);
   @override
   Future<UserModel> signUpUser({
     required String email,
@@ -40,6 +44,12 @@ class AuthDatasourceImpl implements AuthDatasource {
       if (response.statusCode != 201) {
         throw ServerException(response.data["message"]);
       }
+      final token = response.data['token'];
+
+      await storage.write(key: 'token', value: token);
+
+      dio.options.headers['token'] = token;
+
       return UserModel.fromJson(response.data["userData"]);
     } catch (e) {
       throw ServerException(e.toString());
@@ -60,8 +70,30 @@ class AuthDatasourceImpl implements AuthDatasource {
       if (response.statusCode != 200) {
         throw ServerException(response.data['message']);
       }
+      final token = response.data['token'];
+
+      await storage.write(key: 'token', value: token);
+
+      dio.options.headers['token'] = token;
 
       return UserModel.fromJson(response.data['userData']);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel> checkAuth() async {
+    try {
+      final token = await storage.read(key: 'token');
+      dio.options.headers['token'] = token;
+
+      final response = await dio.get('/api/auth/check');
+      if (response.statusCode != 200) {
+        throw ServerException(response.data?['message'] ?? "Request Failed");
+      }
+
+      return UserModel.fromJson(response.data['user']);
     } catch (e) {
       throw ServerException(e.toString());
     }

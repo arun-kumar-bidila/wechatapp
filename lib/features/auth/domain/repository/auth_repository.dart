@@ -6,15 +6,15 @@ abstract interface class AuthRepository {
   Future<Either<Failure, User>> signUpUser({
     required String email,
     required String fullName,
-   required String password,
-   required String bio,
+    required String password,
+    required String bio,
   });
 
-   Future<Either<Failure, User>> loginUser({
+  Future<Either<Failure, User>> loginUser({
     required String email,
-   
-   required String password,
-  
+
+    required String password,
   });
 
+  Future<Either<Failure, User>> checkAuth();
 }

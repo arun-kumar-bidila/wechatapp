@@ -43,9 +43,12 @@ class _LoginPageState extends State<LoginPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthUserLoggedIn) {
-                showMaterialbanner(context, state.user.fullName);
+                showMaterialbanner(context, "Login Success");
+                context.go('/home');
               }
             },
+            buildWhen: (previous, current) =>
+                current is AuthLoginLoading || current is AuthLoginFailure,
             builder: (context, state) {
               if (state is AuthLoginLoading) {
                 return CircularProgressIndicator();

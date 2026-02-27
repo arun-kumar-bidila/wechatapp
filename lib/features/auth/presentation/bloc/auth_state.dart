@@ -25,3 +25,7 @@ final class AuthLoginFailure extends AuthState {
   final String message;
   AuthLoginFailure(this.message);
 }
+
+final class AuthCheckLoading extends AuthState{}
+final class AuthCheckFailure extends AuthState{}
+final class AuthUserLoggedOut extends AuthState{}
