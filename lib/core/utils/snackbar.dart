@@ -11,14 +11,14 @@ void showSnackabr(BuildContext context, String content) {
             content,
             style: Theme.of(
               context,
-            ).textTheme.bodySmall!.copyWith(color: AppColors.white),
+            ).textTheme.bodyMedium!.copyWith(color: AppColors.white),
           ),
         ),
         elevation: 0,
 
         backgroundColor: AppColors.appColor,
 
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 12),
       ),
     );
 }

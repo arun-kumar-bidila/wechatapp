@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
+
 
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
-import 'package:wechat/core/utils/material_banner.dart';
+
+import 'package:wechat/core/utils/snackbar.dart';
 
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
@@ -43,8 +44,8 @@ class _AddBioPageState extends State<AddBioPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthUserLoggedIn) {
-                  showMaterialbanner(context, "SignUp Success");
-                context.go('/home');
+                  showSnackabr(context, "SignUp Success");
+                
               }
             },
             buildWhen: (previous, current) =>
@@ -60,7 +61,7 @@ class _AddBioPageState extends State<AddBioPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset("assets/logo.svg", height: 150),
+                      SvgPicture.asset("assets/images/logo.svg", height: 100),
                       SizedBox(height: 24),
                       Text(
                         "Add Bio .",

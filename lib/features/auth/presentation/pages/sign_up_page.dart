@@ -49,7 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SvgPicture.asset("assets/logo.svg", height: 100),
+                  SvgPicture.asset("assets/images/logo.svg", height: 100),
                   SizedBox(height: 24),
                   Text(
                     "Sign Up .",
