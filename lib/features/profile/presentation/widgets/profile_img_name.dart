@@ -24,27 +24,39 @@ class _ProfileImgNameState extends State<ProfileImgName> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (user.profilePic.isEmpty)
-                  Hero(
-                    tag: 'location-profile',
-                    child: Container(
-                      width: 45,
-                      height: 45,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).colorScheme.surfaceContainer,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/icons/profile.svg",
-                        fit: BoxFit.contain,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.secondary,
-                          BlendMode.srcIn,
+                Hero(
+                  tag: 'location-profile',
+                  child: user.profilePic.isEmpty
+                      ? Container(
+                          width: 45,
+                          height: 45,
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainer,
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/icons/profile.svg",
+                            fit: BoxFit.contain,
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.secondary,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 45,
+                          height: 45,
+                          child: ClipOval(
+                            child: Image.network(
+                              state.user.profilePic,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                ),
 
                 TweenAnimationBuilder(
                   duration: Duration(milliseconds: 500),
@@ -53,7 +65,7 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                     return Opacity(
                       opacity: value,
                       child: Padding(
-                        padding: EdgeInsetsGeometry.only(left: value*12),
+                        padding: EdgeInsetsGeometry.only(left: value * 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -72,21 +84,6 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                       ),
                     );
                   },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        user.fullName,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-
-                      Text(
-                        user.bio,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
                 ),
                 Spacer(),
                 GestureDetector(

@@ -1,3 +1,5 @@
+
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -8,6 +10,11 @@ import 'package:wechat/features/auth/domain/usecases/check_auth_case.dart';
 import 'package:wechat/features/auth/domain/usecases/login_use_case.dart';
 import 'package:wechat/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/profile/data/datasources/profile_remote_data_source.dart';
+import 'package:wechat/features/profile/data/repository/profile_repository_impl.dart';
+import 'package:wechat/features/profile/domain/repository/profile_repository.dart';
+import 'package:wechat/features/profile/domain/usecases/update_user_usecase.dart';
+import 'package:wechat/features/profile/presentation/bloc/profile_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -24,6 +31,7 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => dio);
   serviceLocator.registerLazySingleton(() => storage);
   _initAuth();
+  _initProfile();
 }
 
 void _initAuth() {
@@ -43,5 +51,15 @@ void _initAuth() {
         loginUseCase: serviceLocator(),
         checkAuthCase: serviceLocator(),
       ),
+    );
+}
+
+void _initProfile() {
+  serviceLocator
+    ..registerFactory<ProfileRemoteDataSource>(() => ProfileRemoteDataSourceImpl(serviceLocator()))
+    ..registerFactory<ProfileRepository>(() => ProfileRepositoryImpl(serviceLocator()))
+    ..registerFactory(() => UpdateUserUsecase(serviceLocator()))
+    ..registerLazySingleton(
+      () => ProfileBloc(updateUserUsecase: serviceLocator()),
     );
 }
