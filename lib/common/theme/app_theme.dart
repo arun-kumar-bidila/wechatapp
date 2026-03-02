@@ -29,7 +29,7 @@ class AppTheme {
       secondary: AppColors.white,
       surfaceContainer:AppColors.iconBackDarkTheme 
     ),
-    iconTheme: IconThemeData(color: AppColors.appColor),
+    iconTheme: IconThemeData(color: AppColors.white),
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.backgroundColor,
     ),
@@ -55,7 +55,7 @@ class AppTheme {
         color: AppColors.white,
       ),
       bodySmall: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
         color: AppColors.white,
       ),
@@ -84,7 +84,7 @@ class AppTheme {
       secondary: AppColors.black,
       surfaceContainer:AppColors.iconBackLightTheme 
     ),
-    iconTheme: IconThemeData(color: AppColors.appColor),
+    iconTheme: IconThemeData(color: AppColors.black),
      appBarTheme: AppBarTheme(
       backgroundColor: AppColors.white,
     ),
@@ -111,7 +111,7 @@ class AppTheme {
         color: AppColors.black,
       ),
       bodySmall: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
         color: AppColors.black,
       ),
