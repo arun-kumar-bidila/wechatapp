@@ -21,19 +21,22 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               context.push('/profile');
             },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(left: 16),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.surfaceContainer,
-              ),
-              child: SvgPicture.asset(
-                "assets/icons/profile.svg",
-                width: 14,
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.secondary,
-                  BlendMode.srcIn,
+            child: Hero(
+              tag: 'location-profile',
+              child: Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(left: 16),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+                child: SvgPicture.asset(
+                  "assets/icons/profile.svg",
+                  width: 14,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.secondary,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
