@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:wechat/common/theme/app_colors.dart';
+
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_feature.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_img_name.dart';
@@ -34,10 +34,11 @@ class _ProfilePageState extends State<ProfilePage> {
             
             ProfileFeature(
               featureName: "Password",
-              featureDesc: "Change Your Password",
+              featureDesc: "Change your Password",
               icon: Icons.visibility_outlined,
             ),
             ThemeSwitch(),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: CommonButton(buttonName: "LogOut", onTap: (){}),

@@ -5,6 +5,7 @@ import 'package:wechat/features/auth/presentation/pages/add_bio_page.dart';
 import 'package:wechat/features/auth/presentation/pages/login_page.dart';
 import 'package:wechat/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:wechat/features/home/presentation/pages/home_page.dart';
+import 'package:wechat/features/profile/presentation/pages/edit_profile_info.dart';
 import 'package:wechat/features/profile/presentation/pages/profile_page.dart';
 import 'package:wechat/splash_screen.dart';
 
@@ -58,7 +59,11 @@ GoRouter createRouter(AuthBloc authBloc) {
         },
       ),
       GoRoute(path: '/home', builder: (context, state) => HomePage()),
-      GoRoute(path: '/profile',builder: (context,state)=>ProfilePage())
+      GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
+      GoRoute(
+        path: '/edit-profile',
+        builder: (context, state) => EditProfileInfo(),
+      ),
     ],
   );
 }

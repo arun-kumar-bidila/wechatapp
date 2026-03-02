@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,21 +23,47 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               context.push('/profile');
             },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(left: 16),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.surfaceContainer,
-              ),
-              child: SvgPicture.asset(
-                "assets/icons/profile.svg",
-                width: 14,
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.secondary,
-                  BlendMode.srcIn,
-                ),
-              ),
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthUserLoggedIn) {
+                  return Hero(
+                    tag: 'location-profile',
+                    child: state.user.profilePic.isEmpty
+                        ? Container(
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.only(left: 16),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainer,
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/icons/profile.svg",
+                              width: 14,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.secondary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          )
+                        : Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: ClipOval(
+                                child: Image.network(
+                                  state.user.profilePic,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                        ),
+                  );
+                }
+                return SizedBox();
+              },
             ),
           ),
         ),
@@ -45,7 +73,7 @@ class _HomePageState extends State<HomePage> {
           Center(
             child: Container(
               padding: EdgeInsets.all(8),
-              margin: EdgeInsets.only(left: 16),
+
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Theme.of(context).colorScheme.surfaceContainer,
