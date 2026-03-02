@@ -45,21 +45,48 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                       ),
                     ),
                   ),
-                SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      user.fullName,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
 
-                    Text(
-                      user.bio,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+                TweenAnimationBuilder(
+                  duration: Duration(milliseconds: 500),
+                  tween: Tween<double>(begin: 0, end: 1),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.only(left: value*12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              user.fullName,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+
+                            Text(
+                              user.bio,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        user.fullName,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+
+                      Text(
+                        user.bio,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
                 ),
                 Spacer(),
                 GestureDetector(

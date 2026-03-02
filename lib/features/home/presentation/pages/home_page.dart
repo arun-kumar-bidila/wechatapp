@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
           Center(
             child: Container(
               padding: EdgeInsets.all(8),
-              margin: EdgeInsets.only(left: 16),
+             
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Theme.of(context).colorScheme.surfaceContainer,
