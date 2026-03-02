@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_theme.dart';
+import 'package:wechat/common/theme/theme_cubit.dart';
 import 'package:wechat/core/router/router.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/init_dependencies.dart';
@@ -11,7 +12,10 @@ void main() async {
   await initDependencies();
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => serviceLocator<AuthBloc>())],
+      providers: [
+        BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (_) => ThemeCubit()),
+      ],
       child: MyApp(),
     ),
   );
@@ -35,13 +39,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: "WeChat",
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightThemeMode,
-      darkTheme: AppTheme.darkThemeMode,
-      // home: SignUpPage(),
-      routerConfig: _router,
+    return BlocBuilder<ThemeCubit, ThemeMode>(
+      builder: (context, state) {
+        return MaterialApp.router(
+          title: "WeChat",
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightThemeMode,
+          darkTheme: AppTheme.darkThemeMode,
+          themeMode: state,
+          // home: SignUpPage(),
+          routerConfig: _router,
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,19 +17,24 @@ class _HomePageState extends State<HomePage> {
         actionsPadding: EdgeInsets.only(right: 16),
 
         leading: Center(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(left: 16),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Theme.of(context).colorScheme.surfaceContainer,
-            ),
-            child: SvgPicture.asset(
-              "assets/icons/profile.svg",
-              width: 14,
-              colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.secondary,
-                BlendMode.srcIn,
+          child: GestureDetector(
+            onTap: () {
+              context.push('/profile');
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(left: 16),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.surfaceContainer,
+              ),
+              child: SvgPicture.asset(
+                "assets/icons/profile.svg",
+                width: 14,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.secondary,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),
