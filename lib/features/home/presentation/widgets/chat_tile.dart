@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wechat/features/auth/domain/entities/user.dart';
+import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class ChatTile extends StatelessWidget {
   final User user;
@@ -16,7 +17,7 @@ class ChatTile extends StatelessWidget {
           user.profilePic.isEmpty
               ? Container(
                   padding: EdgeInsets.all(12),
-                 
+
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Theme.of(context).colorScheme.surfaceContainer,
@@ -31,12 +32,20 @@ class ChatTile extends StatelessWidget {
                   ),
                 )
               : SizedBox(
-                width: 40,
-                height: 40,
-                child: ClipOval(
-                  child: Image.network(user.profilePic, fit: BoxFit.cover),
+                  width: 40,
+                  height: 40,
+                  child: ClipOval(
+                    child: Image.network(
+                      user.profilePic,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+
+                        return ProfileSkeleton();
+                      },
+                    ),
+                  ),
                 ),
-              ),
           SizedBox(width: 12),
           Expanded(
             child: Column(
