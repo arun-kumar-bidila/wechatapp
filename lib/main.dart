@@ -5,6 +5,7 @@ import 'package:wechat/common/theme/app_theme.dart';
 import 'package:wechat/common/theme/theme_cubit.dart';
 import 'package:wechat/core/router/router.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:wechat/init_dependencies.dart';
 
@@ -17,6 +18,7 @@ void main() async {
         BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
         BlocProvider(create: (_) => serviceLocator<ProfileBloc>()),
         BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
       ],
       child: MyApp(),
     ),

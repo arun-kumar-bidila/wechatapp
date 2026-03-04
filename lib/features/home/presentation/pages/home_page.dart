@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/theme/app_colors.dart';
+import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
+import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +16,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+  Future<void> _refreshUsers() async {
+ context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+}
+
+
+  @override
+  void initState()  {
+    super.initState();
+
+    final authState = context.read<AuthBloc>().state;
+
+    if (authState is AuthUserLoggedIn) {
+      SocketService().connect(authState.user.id, (onlineUsers) {
+        debugPrint("Online users: $onlineUsers");
+      });
+    }
+    context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                     tag: 'location-profile',
                     child: state.user.profilePic.isEmpty
                         ? Container(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(12),
                             margin: EdgeInsets.only(left: 16),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -40,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: SvgPicture.asset(
                               "assets/icons/profile.svg",
-                              width: 14,
+                              width: 18,
                               colorFilter: ColorFilter.mode(
                                 Theme.of(context).colorScheme.secondary,
                                 BlendMode.srcIn,
@@ -48,10 +73,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                           )
                         : Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: SizedBox(
-                              width: 30,
-                              height: 30,
+                            padding: EdgeInsets.only(left: 16),
+                            child: SizedBox(
+                              width: 40,
+                              height: 40,
                               child: ClipOval(
                                 child: Image.network(
                                   state.user.profilePic,
@@ -59,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
-                        ),
+                          ),
                   );
                 }
                 return SizedBox();
@@ -80,7 +105,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Icon(
                 Icons.notifications_none,
-                size: 20,
+                size: 24,
                 color: Theme.of(context).colorScheme.secondary,
               ),
             ),
@@ -127,6 +152,28 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  backgroundColor: AppColors.white,
+                  color: AppColors.appColor,
+                  onRefresh: _refreshUsers,
+                  child: BlocConsumer<HomeBloc, HomeState>(
+                    listener: (context, state) {},
+                    builder: (context, state) {
+                      if (state is HomeAllUsersFetchSuccess) {
+                        final users = state.allUsers;
+                        return ListView.builder(
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            return ChatTile(user: users[index]);
+                          },
+                        );
+                      }
+                      return SizedBox();
+                    },
+                  ),
                 ),
               ),
             ],
