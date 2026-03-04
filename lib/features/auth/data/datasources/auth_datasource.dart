@@ -86,6 +86,10 @@ class AuthDatasourceImpl implements AuthDatasource {
   Future<UserModel> checkAuth() async {
     try {
       final token = await storage.read(key: 'token');
+
+      if (token == null) {
+        throw ServerException('Token is empty');
+      }
       dio.options.headers['token'] = token;
 
       final response = await dio.get('/api/auth/check');
