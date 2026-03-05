@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/widgets/common_icon.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class ProfileImgName extends StatefulWidget {
   const ProfileImgName({super.key});
@@ -53,6 +54,15 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                             child: Image.network(
                               state.user.profilePic,
                               fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+
+                                    return ProfileSkeleton(
+                                      width: 40,
+                                      height: 40,
+                                    );
+                                  },
                             ),
                           ),
                         ),

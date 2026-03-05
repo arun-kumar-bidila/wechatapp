@@ -41,7 +41,7 @@ class ChatTile extends StatelessWidget {
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
 
-                        return ProfileSkeleton();
+                        return ProfileSkeleton(width: 40, height: 40);
                       },
                     ),
                   ),

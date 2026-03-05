@@ -7,6 +7,7 @@ import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
+import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,15 +17,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   Future<void> _refreshUsers() async {
- context.read<HomeBloc>().add(HomeOnFetchAllUsers());
-}
-
+    context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+  }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
 
     final authState = context.read<AuthBloc>().state;
@@ -81,6 +79,16 @@ class _HomePageState extends State<HomePage> {
                                 child: Image.network(
                                   state.user.profilePic,
                                   fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null){ return child;}
+                                         
+
+                                        return ProfileSkeleton(
+                                          width: 40,
+                                          height: 40,
+                                        );
+                                      },
                                 ),
                               ),
                             ),
