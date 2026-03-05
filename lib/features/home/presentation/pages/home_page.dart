@@ -21,6 +21,8 @@ class _HomePageState extends State<HomePage> {
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
   }
 
+  late List<dynamic> currentOnlineUsers = [];
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,9 @@ class _HomePageState extends State<HomePage> {
     if (authState is AuthUserLoggedIn) {
       SocketService().connect(authState.user.id, (onlineUsers) {
         debugPrint("Online users: $onlineUsers");
+        setState(() {
+          currentOnlineUsers = onlineUsers;
+        });
       });
     }
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
@@ -81,8 +86,9 @@ class _HomePageState extends State<HomePage> {
                                   fit: BoxFit.cover,
                                   loadingBuilder:
                                       (context, child, loadingProgress) {
-                                        if (loadingProgress == null){ return child;}
-                                         
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
 
                                         return ProfileSkeleton(
                                           width: 40,
@@ -171,11 +177,21 @@ class _HomePageState extends State<HomePage> {
                     listener: (context, state) {},
                     builder: (context, state) {
                       if (state is HomeAllUsersFetchSuccess) {
-                        final users = state.allUsers;
+                        final users = state.allUsersData.users;
+
                         return ListView.builder(
                           itemCount: users.length,
                           itemBuilder: (context, index) {
-                            return ChatTile(user: users[index]);
+                            final unseenCount =
+                                state.allUsersData.unseen[users[index].id] ?? 0;
+                            final onlineStatus = currentOnlineUsers.contains(
+                              users[index].id,
+                            );
+                            return ChatTile(
+                              user: users[index],
+                              unseenCount: unseenCount,
+                              onlineStatus: onlineStatus,
+                            );
                           },
                         );
                       }

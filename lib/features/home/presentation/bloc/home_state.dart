@@ -13,6 +13,7 @@ final class HomeAllUsersFetchFailure extends HomeState {
 }
 
 final class HomeAllUsersFetchSuccess extends HomeState {
-  final List<User> allUsers;
-  HomeAllUsersFetchSuccess(this.allUsers);
+  final GetAllUserEntity allUsersData;
+  
+  HomeAllUsersFetchSuccess(this.allUsersData);
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wechat/common/usecase/usecase.dart';
-import 'package:wechat/features/auth/domain/entities/user.dart';
+
+import 'package:wechat/features/home/domain/entity/get_all_user_entity.dart';
 import 'package:wechat/features/home/domain/usecases/get_all_users_usecase.dart';
 
 part 'home_event.dart';
