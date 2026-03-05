@@ -4,11 +4,11 @@ import 'package:wechat/core/error/failure.dart';
 import 'package:wechat/features/auth/domain/repository/auth_repository.dart';
 
 
-class LogoutUserUsecase implements Usecase<String, NoParams> {
+class LogoutUserUsecase implements Usecase<void, NoParams> {
   final AuthRepository authRepository;
   LogoutUserUsecase(this.authRepository);
   @override
-  Future<Either<Failure, String>> call(NoParams params) async {
+  Future<Either<Failure, void>> call(NoParams params) async {
     return await authRepository.logooutUser();
   }
 }

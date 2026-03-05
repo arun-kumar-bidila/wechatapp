@@ -56,10 +56,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
     @override
-  Future<Either<Failure, String>> logooutUser() async {
+  Future<Either<Failure, void>> logooutUser() async {
     try {
-      final res = await authDatasource.logoutUser();
-      return right(res);
+      await authDatasource.logoutUser();
+      return right(null);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

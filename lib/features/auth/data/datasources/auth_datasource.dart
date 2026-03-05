@@ -17,7 +17,7 @@ abstract interface class AuthDatasource {
   });
 
   Future<UserModel> checkAuth();
-    Future<String> logoutUser();
+    Future<void> logoutUser();
 }
 
 class AuthDatasourceImpl implements AuthDatasource {
@@ -106,11 +106,11 @@ class AuthDatasourceImpl implements AuthDatasource {
 
   
   @override
-  Future<String> logoutUser() async {
+  Future<void> logoutUser() async {
     try {
-      await storage.write(key: 'token', value: '');
+      await storage.delete(key: 'token');
       dio.options.headers.remove('token');
-      return 'Logout Successful';
+      
     } catch (e) {
       throw ServerException(e.toString());
     }
