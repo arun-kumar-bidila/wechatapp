@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
+import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/snackbar.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 current is AuthLoginLoading || current is AuthLoginFailure,
             builder: (context, state) {
               if (state is AuthLoginLoading) {
-                return CircularProgressIndicator();
+                return Loader();
               }
               return SingleChildScrollView(
                 padding: EdgeInsetsGeometry.all(16),

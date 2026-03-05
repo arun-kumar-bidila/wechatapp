@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
+import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_feature.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_img_name.dart';
@@ -32,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthUserLoggedOutLoading) {
-              return Center(child: CircularProgressIndicator());
+              return Loader();
             }
             if (state is AuthUserLoggedIn) {
               return Column(

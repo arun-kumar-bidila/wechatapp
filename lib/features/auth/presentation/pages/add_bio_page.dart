@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
+import 'package:wechat/common/widgets/loader.dart';
 
 import 'package:wechat/core/utils/snackbar.dart';
 
@@ -52,7 +53,7 @@ class _AddBioPageState extends State<AddBioPage> {
                 current is AuthSignUpLoading || current is AuthSignUpFailure,
             builder: (context, state) {
               if (state is AuthSignUpLoading) {
-                return CircularProgressIndicator();
+                return Loader();
               }
               return SingleChildScrollView(
                 padding: EdgeInsets.all(16),

@@ -106,7 +106,7 @@ class _ProfileImgNameState extends State<ProfileImgName> {
             ),
           );
         }
-        return CircularProgressIndicator();
+        return SizedBox();
       },
     );
   }
