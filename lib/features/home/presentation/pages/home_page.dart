@@ -21,8 +21,6 @@ class _HomePageState extends State<HomePage> {
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
   }
 
-  late List<dynamic> currentOnlineUsers = [];
-
   @override
   void initState() {
     super.initState();
@@ -31,10 +29,7 @@ class _HomePageState extends State<HomePage> {
 
     if (authState is AuthUserLoggedIn) {
       SocketService().connect(authState.user.id, (onlineUsers) {
-        debugPrint("Online users: $onlineUsers");
-        setState(() {
-          currentOnlineUsers = onlineUsers;
-        });
+        context.read<HomeBloc>().add(HomeOnlineUsersUpdated(onlineUsers));
       });
     }
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
@@ -176,15 +171,16 @@ class _HomePageState extends State<HomePage> {
                   child: BlocConsumer<HomeBloc, HomeState>(
                     listener: (context, state) {},
                     builder: (context, state) {
-                      if (state is HomeAllUsersFetchSuccess) {
-                        final users = state.allUsersData.users;
+                      if (state.allUsersData != null) {
+                        final users = state.allUsersData!.users;
 
                         return ListView.builder(
                           itemCount: users.length,
                           itemBuilder: (context, index) {
                             final unseenCount =
-                                state.allUsersData.unseen[users[index].id] ?? 0;
-                            final onlineStatus = currentOnlineUsers.contains(
+                                state.allUsersData!.unseen[users[index].id] ??
+                                0;
+                            final onlineStatus = state.onlineUsers.contains(
                               users[index].id,
                             );
                             return ChatTile(
