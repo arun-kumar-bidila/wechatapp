@@ -1,9 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:wechat/core/router/go_router_refresh_stream.dart';
+import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/auth/presentation/pages/add_bio_page.dart';
 import 'package:wechat/features/auth/presentation/pages/login_page.dart';
 import 'package:wechat/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:wechat/features/chat/presentation/pages/personal_chat_page.dart';
 import 'package:wechat/features/home/presentation/pages/home_page.dart';
 import 'package:wechat/features/profile/presentation/pages/edit_profile_info.dart';
 import 'package:wechat/features/profile/presentation/pages/profile_page.dart';
@@ -40,7 +42,8 @@ GoRouter createRouter(AuthBloc authBloc) {
       if (authState is AuthUserLoggedOut && !isAuth) {
         return '/login';
       }
-      if (authState is AuthCheckFailure || authState is AuthUserLoggedOutFailure ) {
+      if (authState is AuthCheckFailure ||
+          authState is AuthUserLoggedOutFailure) {
         return '/login';
       }
       return null;
@@ -66,6 +69,13 @@ GoRouter createRouter(AuthBloc authBloc) {
       GoRoute(
         path: '/edit-profile',
         builder: (context, state) => EditProfileInfo(),
+      ),
+      GoRoute(
+        path: '/personal-chat',
+        builder: (context, state) {
+          final selectedUser = state.extra as User;
+          return PersonalChatPage(selectedUser: selectedUser);
+        },
       ),
     ],
   );
