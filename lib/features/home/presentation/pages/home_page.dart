@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_colors.dart';
-import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
@@ -25,13 +24,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    final authState = context.read<AuthBloc>().state;
-
-    if (authState is AuthUserLoggedIn) {
-      SocketService().connect(authState.user.id, (onlineUsers) {
-        context.read<HomeBloc>().add(HomeOnlineUsersUpdated(onlineUsers));
-      });
-    }
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
   }
 

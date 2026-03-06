@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_theme.dart';
 import 'package:wechat/common/theme/theme_cubit.dart';
 import 'package:wechat/core/router/router.dart';
+import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/profile/presentation/bloc/profile_bloc.dart';
@@ -43,18 +44,31 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, state) {
-        return MaterialApp.router(
-          title: "WeChat",
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightThemeMode,
-          darkTheme: AppTheme.darkThemeMode,
-          themeMode: state,
-          // home: SignUpPage(),
-          routerConfig: _router,
-        );
-      },
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+
+      if (state is AuthUserLoggedIn) {
+        SocketService().connect(state.user.id);
+      }
+
+      if (state is AuthUserLoggedOut) {
+        SocketService().disconnect();
+      }
+
+    },
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: "WeChat",
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightThemeMode,
+            darkTheme: AppTheme.darkThemeMode,
+            themeMode: state,
+            // home: SignUpPage(),
+            routerConfig: _router,
+          );
+        },
+      ),
     );
   }
 }
