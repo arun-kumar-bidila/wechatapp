@@ -5,11 +5,11 @@ class SocketService {
   IO.Socket? socket;
 
   void connect(String userId, Function(List<dynamic>) onOnlineUsers) {
-    // 🔥 Prevent duplicate connection (same as your React check)
+  
     if (socket != null && socket!.connected) return;
 
     socket = IO.io(
-      "https://wechat-y4je.onrender.com", // replace with your backend
+      "https://wechat-y4je.onrender.com", 
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()

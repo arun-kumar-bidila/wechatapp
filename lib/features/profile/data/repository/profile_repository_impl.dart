@@ -17,15 +17,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
     File? image,
   }) async {
     try {
-      
-      
-        final res = await profileRemoteDataSource.updateUser(
-          fullName: fullName,
-          bio: bio,
-          image: image,
-        );
-        return right(res);
-      
+      final res = await profileRemoteDataSource.updateUser(
+        fullName: fullName,
+        bio: bio,
+        image: image,
+      );
+      return right(res);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

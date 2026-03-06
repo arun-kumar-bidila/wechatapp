@@ -6,6 +6,7 @@ import 'package:wechat/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:wechat/features/auth/domain/repository/auth_repository.dart';
 import 'package:wechat/features/auth/domain/usecases/check_auth_case.dart';
 import 'package:wechat/features/auth/domain/usecases/login_use_case.dart';
+import 'package:wechat/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:wechat/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/data/datasources/home_remote_data_source.dart';
@@ -49,11 +50,13 @@ void _initAuth() {
     ..registerFactory(() => SignUpUseCase(serviceLocator()))
     ..registerFactory(() => LoginUseCase(serviceLocator()))
     ..registerFactory(() => CheckAuthCase(serviceLocator()))
+    ..registerFactory(()=>LogoutUserUsecase(serviceLocator()))
     ..registerLazySingleton(
       () => AuthBloc(
         signUpUseCase: serviceLocator(),
         loginUseCase: serviceLocator(),
         checkAuthCase: serviceLocator(),
+        logoutUserUsecase: serviceLocator()
       ),
     );
 }

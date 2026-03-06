@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_icon.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
+import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/core/utils/snackbar.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
@@ -60,7 +61,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           },
           builder: (context, state) {
             if (state is ProfileUptadeLoading) {
-              return Center(child: CircularProgressIndicator());
+              return Loader();
             }
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
@@ -152,7 +153,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                     ),
                   );
                 }
-                return Center(child: CircularProgressIndicator());
+                return SizedBox();
               },
             );
           },

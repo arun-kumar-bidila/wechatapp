@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wechat/common/usecase/usecase.dart';
-import 'package:wechat/features/auth/domain/entities/user.dart';
+
+import 'package:wechat/features/home/domain/entity/get_all_user_entity.dart';
 import 'package:wechat/features/home/domain/usecases/get_all_users_usecase.dart';
 
 part 'home_event.dart';
@@ -12,18 +13,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc({required GetAllUsersUsecase getAllUsersUsecase})
     : _getAllUsersUsecase = getAllUsersUsecase,
-      super(HomeInitial()) {
+      super(HomeState()) {
     on<HomeOnFetchAllUsers>(_onFetchAllUsers);
+     on<HomeOnlineUsersUpdated>((event, emit) {
+      emit(state.copyWith(onlineUsers: event.onlineUsers));
+    });
   }
 
   void _onFetchAllUsers(
     HomeOnFetchAllUsers event,
     Emitter<HomeState> emit,
   ) async {
+    emit(state.copyWith(isLoading: true, error: null));
     final res = await _getAllUsersUsecase(NoParams());
     res.fold(
-      (l) => emit(HomeAllUsersFetchFailure(l.message)),
-      (r) => emit(HomeAllUsersFetchSuccess(r)),
+      (l) => emit(state.copyWith(isLoading: false, error: l.message)),
+      (r) => emit(state.copyWith(isLoading: false, allUsersData: r)),
     );
   }
 }

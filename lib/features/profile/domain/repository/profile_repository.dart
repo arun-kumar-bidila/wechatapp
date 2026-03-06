@@ -5,5 +5,10 @@ import 'package:wechat/core/error/failure.dart';
 import 'package:wechat/features/auth/domain/entities/user.dart';
 
 abstract interface class ProfileRepository {
-  Future<Either<Failure, User>> updateUser({required String fullName,required String bio,File? image});
+  Future<Either<Failure, User>> updateUser({
+    required String fullName,
+    required String bio,
+    File? image,
+  });
+
 }

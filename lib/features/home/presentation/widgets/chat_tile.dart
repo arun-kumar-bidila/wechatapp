@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/features/auth/domain/entities/user.dart';
+import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class ChatTile extends StatelessWidget {
   final User user;
-  const ChatTile({super.key, required this.user});
+  final int unseenCount;
+  final bool onlineStatus;
+  const ChatTile({
+    super.key,
+    required this.user,
+    required this.unseenCount,
+    required this.onlineStatus,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +25,7 @@ class ChatTile extends StatelessWidget {
           user.profilePic.isEmpty
               ? Container(
                   padding: EdgeInsets.all(12),
-                 
+
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Theme.of(context).colorScheme.surfaceContainer,
@@ -31,12 +40,20 @@ class ChatTile extends StatelessWidget {
                   ),
                 )
               : SizedBox(
-                width: 40,
-                height: 40,
-                child: ClipOval(
-                  child: Image.network(user.profilePic, fit: BoxFit.cover),
+                  width: 40,
+                  height: 40,
+                  child: ClipOval(
+                    child: Image.network(
+                      user.profilePic,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+
+                        return ProfileSkeleton(width: 40, height: 40);
+                      },
+                    ),
+                  ),
                 ),
-              ),
           SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -47,18 +64,40 @@ class ChatTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(height: 4),
-                Text(user.bio, style: Theme.of(context).textTheme.bodySmall),
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: onlineStatus ? Colors.green : Colors.red,
+                      ),
+                    ),
+                    SizedBox(width: 4,),
+                    Text(
+                      onlineStatus ? "Online" : "Offline",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.green,
-            ),
-          ),
+          SizedBox(width: 12),
+          unseenCount == 0
+              ? SizedBox()
+              : Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.appColor,
+                  ),
+                  child: Text(
+                    unseenCount.toString(),
+                    style: TextStyle(color: AppColors.white, fontSize: 14),
+                  ),
+                ),
         ],
       ),
     );

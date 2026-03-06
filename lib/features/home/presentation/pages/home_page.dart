@@ -7,6 +7,7 @@ import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
+import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,22 +17,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   Future<void> _refreshUsers() async {
- context.read<HomeBloc>().add(HomeOnFetchAllUsers());
-}
-
+    context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+  }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
 
     final authState = context.read<AuthBloc>().state;
 
     if (authState is AuthUserLoggedIn) {
       SocketService().connect(authState.user.id, (onlineUsers) {
-        debugPrint("Online users: $onlineUsers");
+        context.read<HomeBloc>().add(HomeOnlineUsersUpdated(onlineUsers));
       });
     }
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
@@ -81,6 +79,17 @@ class _HomePageState extends State<HomePage> {
                                 child: Image.network(
                                   state.user.profilePic,
                                   fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+
+                                        return ProfileSkeleton(
+                                          width: 40,
+                                          height: 40,
+                                        );
+                                      },
                                 ),
                               ),
                             ),
@@ -162,12 +171,23 @@ class _HomePageState extends State<HomePage> {
                   child: BlocConsumer<HomeBloc, HomeState>(
                     listener: (context, state) {},
                     builder: (context, state) {
-                      if (state is HomeAllUsersFetchSuccess) {
-                        final users = state.allUsers;
+                      if (state.allUsersData != null) {
+                        final users = state.allUsersData!.users;
+
                         return ListView.builder(
                           itemCount: users.length,
                           itemBuilder: (context, index) {
-                            return ChatTile(user: users[index]);
+                            final unseenCount =
+                                state.allUsersData!.unseen[users[index].id] ??
+                                0;
+                            final onlineStatus = state.onlineUsers.contains(
+                              users[index].id,
+                            );
+                            return ChatTile(
+                              user: users[index],
+                              unseenCount: unseenCount,
+                              onlineStatus: onlineStatus,
+                            );
                           },
                         );
                       }
