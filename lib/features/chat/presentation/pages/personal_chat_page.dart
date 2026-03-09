@@ -136,7 +136,8 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                       itemCount: state.messages.length,
                       itemBuilder: (context, index) {
                         final message = state.messages[index];
-                        return MessageTile(message: message);
+                         final isMe = message.senderId != widget.selectedUser.id;
+                        return MessageTile(message: message,isMe:isMe ,);
                       },
                     );
                   }

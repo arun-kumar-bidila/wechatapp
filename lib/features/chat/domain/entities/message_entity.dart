@@ -4,6 +4,7 @@ class MessageEntity {
   final String? text;
   final String? image;
   final bool seen;
+  final DateTime createdAt;
 
   MessageEntity({
     required this.senderId,
@@ -11,5 +12,6 @@ class MessageEntity {
     this.text,
     this.image,
     required this.seen,
+    required this.createdAt
   });
 }

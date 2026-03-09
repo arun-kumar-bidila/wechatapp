@@ -7,15 +7,17 @@ class MessageModel extends MessageEntity {
     super.text,
     super.image,
     required super.seen,
+    required super.createdAt,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       senderId: json['senderId'],
       receiverId: json['receiverId'],
-      text: json['text'] ?? '',
-      image: json['image'] ?? '',
+      text: json['text'],
+      image: json['image'] ,
       seen: json['seen'],
+      createdAt:  DateTime.parse(json['createdAt'])
     );
   }
 }
