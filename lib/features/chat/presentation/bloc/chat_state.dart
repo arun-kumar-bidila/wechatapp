@@ -18,3 +18,7 @@ final class ChatMessagesFetchFailure extends ChatState {
 
   ChatMessagesFetchFailure(this.message);
 }
+
+final class ChatTextMessageSentFailure extends ChatState{}
+
+final class ChatTextMessageSentSuccess extends ChatState{}

@@ -5,6 +5,10 @@ import 'package:dio/dio.dart';
 
 abstract interface class ChatRemoteDatasource {
   Future<List<MessageModel>> fetchMessages({required String selectedUserId});
+  Future<void> sendTextMessage({
+    required String selectedUserId,
+    required String message,
+  });
 }
 
 class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
@@ -29,6 +33,26 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
       }
     } catch (e) {
       throw ServerException('Error fetching messages: $e');
+    }
+  }
+
+  @override
+  Future<void> sendTextMessage({
+    required String selectedUserId,
+    required String message,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/messages/send/$selectedUserId',
+        data: {'text': message},
+      );
+
+      if (response.statusCode != 200) {
+        throw ServerException(response.data['message']);
+      }
+      return;
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 }

@@ -20,6 +20,7 @@ class PersonalChatPage extends StatefulWidget {
 }
 
 class _PersonalChatPageState extends State<PersonalChatPage> {
+  final TextEditingController _messageController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -136,8 +137,8 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                       itemCount: state.messages.length,
                       itemBuilder: (context, index) {
                         final message = state.messages[index];
-                         final isMe = message.senderId != widget.selectedUser.id;
-                        return MessageTile(message: message,isMe:isMe ,);
+                        final isMe = message.senderId != widget.selectedUser.id;
+                        return MessageTile(message: message, isMe: isMe);
                       },
                     );
                   }
@@ -160,6 +161,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _messageController,
                               decoration: InputDecoration(
                                 hintText: "Type Here....",
                                 hintStyle: Theme.of(
@@ -190,7 +192,23 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                     ),
                   ),
                   SizedBox(width: 8),
-                  SvgPicture.asset("assets/icons/send_button.svg", width: 40),
+                  GestureDetector(
+                    onTap: () {
+                      if (_messageController.text.isEmpty) {
+                        return;
+                      }
+                      context.read<ChatBloc>().add(
+                        ChatTextMessageSendEvent(
+                          selectedUserId: widget.selectedUser.id,
+                          message: _messageController.text.trim(),
+                        ),
+                      );
+                    },
+                    child: SvgPicture.asset(
+                      "assets/icons/send_button.svg",
+                      width: 40,
+                    ),
+                  ),
                 ],
               ),
             ),

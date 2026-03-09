@@ -16,7 +16,25 @@ class ChatRepositoryImpl implements ChatRepository {
     required String selectedUserId,
   }) async {
     try {
-      final res = await chatRemoteDatasource.fetchMessages(selectedUserId: selectedUserId);
+      final res = await chatRemoteDatasource.fetchMessages(
+        selectedUserId: selectedUserId,
+      );
+      return right(res);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendTextMessage({
+    required String selectedUserId,
+    required String message,
+  }) async {
+    try {
+      final res = await chatRemoteDatasource.sendTextMessage(
+        selectedUserId: selectedUserId,
+        message: message,
+      );
       return right(res);
     } on ServerException catch (e) {
       return left(Failure(e.message));
