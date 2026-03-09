@@ -42,7 +42,7 @@ class HomeState {
   }) {
     return HomeState(
       isLoading: isLoading ?? this.isLoading,
-      error: error,
+      error: error ?? this.error,
       allUsersData: allUsersData ?? this.allUsersData,
        onlineUsers: onlineUsers ?? this.onlineUsers,
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wechat/core/error/failure.dart';
 import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 import 'package:wechat/features/chat/domain/usecases/chat_messages_fetch_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_text_message_usecase.dart';
@@ -17,7 +16,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     required SendTextMessageUsecase sendTextMessageUsecase,
   }) : _chatMessagesFetchUsecase = chatMessagesFetchUsecase,
        _sendTextMessageUsecase = sendTextMessageUsecase,
-       super(ChatInitial()) {
+       super(const ChatState()) {
     on<ChatMessagesFetchEvent>(_onChatMessagesFetch);
     on<ChatTextMessageSendEvent>(_onTextMessageSendEvent);
   }
@@ -26,15 +25,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ChatMessagesFetchEvent event,
     Emitter<ChatState> emit,
   ) async {
-    emit(ChatMessagesLoading());
+    emit(state.copyWith(isLoading: true));
 
     final result = await _chatMessagesFetchUsecase(
       ChatMessagesFetchUsecaseParams(event.selectedUserId),
     );
 
     result.fold(
-      (failure) => emit(ChatMessagesFetchFailure(failure.message)),
-      (messages) => emit(ChatMessagesFetchSuccess(messages)),
+      (failure) =>
+          emit(state.copyWith(isLoading: false, error: failure.message)),
+      (messages) => emit(
+        state.copyWith(isLoading: false, messages: messages, error: null),
+      ),
     );
   }
 
@@ -49,8 +51,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       ),
     );
     result.fold(
-      (failure) => emit(ChatTextMessageSentFailure()),
-      (r) => emit(ChatTextMessageSentSuccess()),
+      (failure) => emit(state.copyWith(error: failure.message)),
+      (_) {},
     );
   }
 }

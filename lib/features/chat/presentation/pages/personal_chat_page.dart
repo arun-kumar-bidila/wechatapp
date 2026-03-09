@@ -129,10 +129,10 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             Expanded(
               child: BlocBuilder<ChatBloc, ChatState>(
                 builder: (context, state) {
-                  if (state is ChatMessagesLoading) {
+                  if (state.isLoading) {
                     return Loader();
                   }
-                  if (state is ChatMessagesFetchSuccess) {
+                  if (state.messages.isNotEmpty) {
                     return ListView.builder(
                       itemCount: state.messages.length,
                       itemBuilder: (context, index) {
@@ -203,6 +203,8 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                           message: _messageController.text.trim(),
                         ),
                       );
+                      _messageController.clear();
+                      
                     },
                     child: SvgPicture.asset(
                       "assets/icons/send_button.svg",
