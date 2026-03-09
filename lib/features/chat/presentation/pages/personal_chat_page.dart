@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:wechat/features/chat/presentation/widgets/message_tile.dart';
 
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 
@@ -20,9 +22,8 @@ class PersonalChatPage extends StatefulWidget {
 class _PersonalChatPageState extends State<PersonalChatPage> {
   @override
   void initState() {
-  
     super.initState();
-     context.read<ChatBloc>().add(
+    context.read<ChatBloc>().add(
       ChatMessagesFetchEvent(selectedUserId: widget.selectedUser.id),
     );
   }
@@ -87,9 +88,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
         actions: [
           Center(
             child: BlocConsumer<HomeBloc, HomeState>(
-              listener: (context, state) {
-
-              },
+              listener: (context, state) {},
               builder: (context, state) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 16.0),
@@ -129,9 +128,17 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             Expanded(
               child: BlocBuilder<ChatBloc, ChatState>(
                 builder: (context, state) {
+                  if (state is ChatMessagesLoading) {
+                    return Loader();
+                  }
                   if (state is ChatMessagesFetchSuccess) {
-                    print(state.messages);
-                    return Column(children: [Text(state.messages[0].text!)]);
+                    return ListView.builder(
+                      itemCount: state.messages.length,
+                      itemBuilder: (context, index) {
+                        final message = state.messages[index];
+                        return MessageTile(message: message);
+                      },
+                    );
                   }
                   return SizedBox();
                 },
