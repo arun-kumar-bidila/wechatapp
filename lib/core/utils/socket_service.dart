@@ -2,14 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
+  static final SocketService _instance = SocketService._internal();
+
+  factory SocketService() => _instance;
+
+  SocketService._internal();
+
   IO.Socket? socket;
 
-  void connect(String userId, Function(List<dynamic>) onOnlineUsers) {
-  
+  final ValueNotifier<List<dynamic>> onlineUsers = ValueNotifier([]);
+
+  void connect(String userId) {
+
     if (socket != null && socket!.connected) return;
 
     socket = IO.io(
-      "https://wechat-y4je.onrender.com", 
+      "https://wechat-y4je.onrender.com",
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()
@@ -23,21 +31,14 @@ class SocketService {
       debugPrint("✅ Connected");
     });
 
-    socket!.onConnectError((data) {
-      debugPrint("Connect Error: $data");
-    });
-
-    socket!.onError((data) {
-      debugPrint("Socket Error: $data");
-    });
-
     socket!.on("getOnlineUsers", (userIds) {
-      onOnlineUsers(List.from(userIds));
+      onlineUsers.value = List.from(userIds);
     });
 
     socket!.onDisconnect((_) {
       debugPrint("❌ Disconnected");
     });
+
   }
 
   void disconnect() {

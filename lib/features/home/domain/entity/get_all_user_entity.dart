@@ -1,5 +1,5 @@
 
-import 'package:wechat/features/auth/domain/entities/user.dart';
+import 'package:wechat/common/entities/user.dart';
 
 class GetAllUserEntity {
   final List<User> users;

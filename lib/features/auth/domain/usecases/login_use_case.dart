@@ -2,7 +2,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:wechat/common/usecase/usecase.dart';
 import 'package:wechat/core/error/failure.dart';
-import 'package:wechat/features/auth/domain/entities/user.dart';
+import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/features/auth/domain/repository/auth_repository.dart';
 
 class LoginUseCase implements Usecase<User, LoginUseCaseParams> {

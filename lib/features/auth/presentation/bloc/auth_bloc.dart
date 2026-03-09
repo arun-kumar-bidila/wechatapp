@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wechat/common/usecase/usecase.dart';
-import 'package:wechat/features/auth/domain/entities/user.dart';
+import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/features/auth/domain/usecases/check_auth_case.dart';
 import 'package:wechat/features/auth/domain/usecases/login_use_case.dart';
 import 'package:wechat/features/auth/domain/usecases/logout_user_usecase.dart';

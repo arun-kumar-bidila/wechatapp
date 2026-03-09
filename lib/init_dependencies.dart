@@ -19,6 +19,11 @@ import 'package:wechat/features/profile/data/repository/profile_repository_impl.
 import 'package:wechat/features/profile/domain/repository/profile_repository.dart';
 import 'package:wechat/features/profile/domain/usecases/update_user_usecase.dart';
 import 'package:wechat/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:wechat/features/chat/data/datasources/chat_remote_datasource.dart';
+import 'package:wechat/features/chat/data/repository/chat_repository_impl.dart';
+import 'package:wechat/features/chat/domain/repository/chat_repository.dart';
+import 'package:wechat/features/chat/domain/usecases/chat_messages_fetch_usecase.dart';
+import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -37,6 +42,7 @@ Future<void> initDependencies() async {
   _initAuth();
   _initProfile();
   _initHome();
+  _initChat();
 }
 
 void _initAuth() {
@@ -50,13 +56,13 @@ void _initAuth() {
     ..registerFactory(() => SignUpUseCase(serviceLocator()))
     ..registerFactory(() => LoginUseCase(serviceLocator()))
     ..registerFactory(() => CheckAuthCase(serviceLocator()))
-    ..registerFactory(()=>LogoutUserUsecase(serviceLocator()))
+    ..registerFactory(() => LogoutUserUsecase(serviceLocator()))
     ..registerLazySingleton(
       () => AuthBloc(
         signUpUseCase: serviceLocator(),
         loginUseCase: serviceLocator(),
         checkAuthCase: serviceLocator(),
-        logoutUserUsecase: serviceLocator()
+        logoutUserUsecase: serviceLocator(),
       ),
     );
 }
@@ -86,5 +92,19 @@ void _initHome() {
     ..registerFactory(() => GetAllUsersUsecase(serviceLocator()))
     ..registerLazySingleton(
       () => HomeBloc(getAllUsersUsecase: serviceLocator()),
+    );
+}
+
+void _initChat() {
+  serviceLocator
+    ..registerFactory<ChatRemoteDatasource>(
+      () => ChatRemoteDatasourceImpl(serviceLocator()),
+    )
+    ..registerFactory<ChatRepository>(
+      () => ChatRepositoryImpl(serviceLocator()),
+    )
+    ..registerFactory(() => ChatMessagesFetchUsecase(serviceLocator()))
+    ..registerLazySingleton(
+      () => ChatBloc(chatMessagesFetchUsecase: serviceLocator()),
     );
 }
