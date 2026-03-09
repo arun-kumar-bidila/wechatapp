@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
 
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 
@@ -18,10 +19,18 @@ class PersonalChatPage extends StatefulWidget {
 
 class _PersonalChatPageState extends State<PersonalChatPage> {
   @override
+  void initState() {
+  
+    super.initState();
+     context.read<ChatBloc>().add(
+      ChatMessagesFetchEvent(selectedUserId: widget.selectedUser.id),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         leading: Center(
           child: GestureDetector(
             onTap: () {
@@ -77,7 +86,10 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
         centerTitle: true,
         actions: [
           Center(
-            child: BlocBuilder<HomeBloc, HomeState>(
+            child: BlocConsumer<HomeBloc, HomeState>(
+              listener: (context, state) {
+
+              },
               builder: (context, state) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 16.0),
@@ -86,7 +98,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                       Container(
                         width: 8,
                         height: 8,
-                        
+
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color:
@@ -114,7 +126,17 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(child: SizedBox()),
+            Expanded(
+              child: BlocBuilder<ChatBloc, ChatState>(
+                builder: (context, state) {
+                  if (state is ChatMessagesFetchSuccess) {
+                    print(state.messages);
+                    return Column(children: [Text(state.messages[0].text!)]);
+                  }
+                  return SizedBox();
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(

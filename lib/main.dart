@@ -6,6 +6,7 @@ import 'package:wechat/common/theme/theme_cubit.dart';
 import 'package:wechat/core/router/router.dart';
 import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:wechat/init_dependencies.dart';
@@ -20,6 +21,7 @@ void main() async {
         BlocProvider(create: (_) => serviceLocator<ProfileBloc>()),
         BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
+        BlocProvider(create: (_) => serviceLocator<ChatBloc>()),
       ],
       child: MyApp(),
     ),
@@ -46,16 +48,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        if (state is AuthUserLoggedIn) {
+          SocketService().connect(state.user.id);
+        }
 
-      if (state is AuthUserLoggedIn) {
-        SocketService().connect(state.user.id);
-      }
-
-      if (state is AuthUserLoggedOut) {
-        SocketService().disconnect();
-      }
-
-    },
+        if (state is AuthUserLoggedOut) {
+          SocketService().disconnect();
+        }
+      },
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {
           return MaterialApp.router(

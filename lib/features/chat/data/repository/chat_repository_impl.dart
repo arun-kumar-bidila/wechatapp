@@ -1,0 +1,25 @@
+import 'package:fpdart/fpdart.dart';
+import 'package:wechat/core/error/exceptions.dart';
+import 'package:wechat/core/error/failure.dart';
+import 'package:wechat/features/chat/data/datasources/chat_remote_datasource.dart';
+
+import 'package:wechat/features/chat/domain/entities/message_entity.dart';
+import 'package:wechat/features/chat/domain/repository/chat_repository.dart';
+
+class ChatRepositoryImpl implements ChatRepository {
+  final ChatRemoteDatasource chatRemoteDatasource;
+
+  ChatRepositoryImpl(this.chatRemoteDatasource);
+
+  @override
+  Future<Either<Failure, List<MessageEntity>>> fetchMessages({
+    required String selectedUserId,
+  }) async {
+    try {
+      final res = await chatRemoteDatasource.fetchMessages(selectedUserId: selectedUserId);
+      return right(res);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+}
