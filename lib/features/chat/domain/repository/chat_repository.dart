@@ -10,11 +10,11 @@ abstract interface class ChatRepository {
     required String selectedUserId,
   });
 
-  Future<Either<Failure, void>> sendTextMessage({
+  Future<Either<Failure, MessageEntity>> sendTextMessage({
     required String selectedUserId,
     required String message,
   });
-   Future<Either<Failure, void>> sendImageMessage({
+   Future<Either<Failure, MessageEntity>> sendImageMessage({
     required String selectedUserId,
     required File image,
   });

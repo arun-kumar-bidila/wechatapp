@@ -20,7 +20,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
        _socketService = socketService,
        super(HomeState()) {
     _socketService.onlineUsers.addListener(() {
-      add(HomeOnlineUsersUpdated(SocketService().onlineUsers.value));
+      add(HomeOnlineUsersUpdated(_socketService.onlineUsers.value));
     });
     on<HomeOnFetchAllUsers>(_onFetchAllUsers);
     on<HomeOnlineUsersUpdated>((event, emit) {

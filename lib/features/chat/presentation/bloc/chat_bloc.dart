@@ -67,10 +67,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         message: event.message,
       ),
     );
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (_) {},
-    );
+    result.fold((failure) => emit(state.copyWith(error: failure.message)), (r) {
+      final exists = state.messages.any((m) => m.id == r.id);
+
+      if (exists) return;
+
+      final updatedMessages = List<MessageEntity>.from(state.messages)..add(r);
+
+      emit(state.copyWith(messages: updatedMessages));
+    });
   }
 
   void _onImageMessageSendEvent(
@@ -83,10 +88,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         image: event.image,
       ),
     );
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (_) {},
-    );
+    result.fold((failure) => emit(state.copyWith(error: failure.message)), (r) {
+      final exists = state.messages.any((m) => m.id == r.id);
+
+      if (exists) return;
+
+      final updatedMessages = List<MessageEntity>.from(state.messages)..add(r);
+
+      emit(state.copyWith(messages: updatedMessages));
+    });
   }
 
   void _onSocketMessageReceived(

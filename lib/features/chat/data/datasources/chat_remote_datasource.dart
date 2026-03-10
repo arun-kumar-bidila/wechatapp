@@ -8,12 +8,12 @@ import 'package:dio/dio.dart';
 
 abstract interface class ChatRemoteDatasource {
   Future<List<MessageModel>> fetchMessages({required String selectedUserId});
-  Future<void> sendTextMessage({
+  Future<MessageModel> sendTextMessage({
     required String selectedUserId,
     required String message,
   });
 
-  Future<void> sendImageMessage({
+  Future<MessageModel> sendImageMessage({
     required String selectedUserId,
     required File image,
   });
@@ -45,7 +45,7 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
   }
 
   @override
-  Future<void> sendTextMessage({
+  Future<MessageModel> sendTextMessage({
     required String selectedUserId,
     required String message,
   }) async {
@@ -58,14 +58,14 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
       if (response.statusCode != 200) {
         throw ServerException(response.data['message']);
       }
-      return;
+      return MessageModel.fromJson(response.data['newMessage']);
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<void> sendImageMessage({
+  Future<MessageModel> sendImageMessage({
     required String selectedUserId,
     required File image,
   }) async {
@@ -85,7 +85,7 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
      if (response.statusCode != 200) {
         throw ServerException(data['message']);
       }
-      return;
+      return MessageModel.fromJson(response.data['newMessage']);
     } catch (e) {
       throw ServerException(e.toString());
     }
