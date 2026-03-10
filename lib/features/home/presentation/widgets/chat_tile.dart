@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class ChatTile extends StatefulWidget {
@@ -25,6 +27,9 @@ class _ChatTileState extends State<ChatTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        context.read<HomeBloc>().add(
+          HomeResetUnseenEvent(selectedUserId: widget.user.id),
+        );
         context.push('/personal-chat', extra: widget.user);
       },
       child: Container(
