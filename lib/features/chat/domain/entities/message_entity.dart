@@ -1,4 +1,5 @@
 class MessageEntity {
+  final String id;
   final String senderId;
   final String receiverId;
   final String? text;
@@ -7,11 +8,12 @@ class MessageEntity {
   final DateTime createdAt;
 
   MessageEntity({
+    required this.id,
     required this.senderId,
     required this.receiverId,
     this.text,
     this.image,
     required this.seen,
-    required this.createdAt
+    required this.createdAt,
   });
 }

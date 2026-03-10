@@ -26,3 +26,9 @@ final class ChatImageMessageSendEvent extends ChatEvent {
     required this.image,
   });
 }
+
+class ChatSocketMessageReceivedEvent extends ChatEvent {
+  final MessageEntity message;
+
+  ChatSocketMessageReceivedEvent(this.message);
+}

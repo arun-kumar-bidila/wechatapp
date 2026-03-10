@@ -11,11 +11,15 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetAllUsersUsecase _getAllUsersUsecase;
+  final SocketService _socketService;
 
-  HomeBloc({required GetAllUsersUsecase getAllUsersUsecase})
-    : _getAllUsersUsecase = getAllUsersUsecase,
-      super(HomeState()) {
-    SocketService().onlineUsers.addListener(() {
+  HomeBloc({
+    required GetAllUsersUsecase getAllUsersUsecase,
+    required SocketService socketService,
+  }) : _getAllUsersUsecase = getAllUsersUsecase,
+       _socketService = socketService,
+       super(HomeState()) {
+    _socketService.onlineUsers.addListener(() {
       add(HomeOnlineUsersUpdated(SocketService().onlineUsers.value));
     });
     on<HomeOnFetchAllUsers>(_onFetchAllUsers);
