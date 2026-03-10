@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:wechat/core/error/exceptions.dart';
 import 'package:wechat/features/chat/data/models/message_model.dart';
 import 'dart:async';
@@ -8,6 +11,11 @@ abstract interface class ChatRemoteDatasource {
   Future<void> sendTextMessage({
     required String selectedUserId,
     required String message,
+  });
+
+  Future<void> sendImageMessage({
+    required String selectedUserId,
+    required File image,
   });
 }
 
@@ -49,6 +57,33 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
 
       if (response.statusCode != 200) {
         throw ServerException(response.data['message']);
+      }
+      return;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> sendImageMessage({
+    required String selectedUserId,
+    required File image,
+  }) async {
+    try {
+      String base64Image;
+
+      final bytes = await image.readAsBytes();
+      base64Image = "data:image/jpeg;base64,${base64Encode(bytes)}";
+
+      final response = await _dio.post(
+        '/api/messages/send/$selectedUserId',
+        data: {'image': base64Image},
+      );
+
+      final data = response.data;
+
+     if (response.statusCode != 200) {
+        throw ServerException(data['message']);
       }
       return;
     } catch (e) {

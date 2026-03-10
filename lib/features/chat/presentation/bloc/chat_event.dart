@@ -16,3 +16,13 @@ final class ChatTextMessageSendEvent extends ChatEvent {
     required this.message,
   });
 }
+
+
+final class ChatImageMessageSendEvent extends ChatEvent {
+  final String selectedUserId;
+  final File image;
+  ChatImageMessageSendEvent({
+    required this.selectedUserId,
+    required this.image,
+  });
+}

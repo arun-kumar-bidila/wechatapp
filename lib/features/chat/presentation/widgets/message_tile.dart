@@ -25,10 +25,12 @@ class MessageTile extends StatelessWidget {
                     Column(
                       children: [
                         Image.asset('assets/images/avatar_icon.png', width: 28),
-                          SizedBox(height: 4,),
+                        SizedBox(height: 4),
                         Text(
                           DateFormat('hh:mm').format(message.createdAt),
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 8),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall!.copyWith(fontSize: 8),
                         ),
                       ],
                     ),
@@ -36,29 +38,39 @@ class MessageTile extends StatelessWidget {
                     SizedBox(width: 8),
                   ],
                 ),
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.7,
-            ),
-            padding: EdgeInsets.all(8),
-            margin: EdgeInsets.only(bottom: 24),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(16),
-                topLeft: Radius.circular(16),
-                bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
-                bottomRight: isMe ? Radius.zero : Radius.circular(16),
-              ),
-              color: isMe
-                  ? AppColors.appColor
-                  : Theme.of(context).colorScheme.surfaceContainer,
-            ),
-            child: Text(
-              message.text ?? '',
-              style: Theme.of(context).textTheme.bodyMedium,
-              softWrap: true,
-            ),
-          ),
+          message.text != null
+              ? Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.7,
+                  ),
+                  padding: EdgeInsets.all(8),
+                  margin: EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(16),
+                      topLeft: Radius.circular(16),
+                      bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
+                      bottomRight: isMe ? Radius.zero : Radius.circular(16),
+                    ),
+                    color: isMe
+                        ? AppColors.appColor
+                        : Theme.of(context).colorScheme.surfaceContainer,
+                  ),
+                  child: Text(
+                    message.text ?? '',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    softWrap: true,
+                  ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    message.image!,
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
           isMe
               ? Row(
                   children: [
@@ -66,10 +78,12 @@ class MessageTile extends StatelessWidget {
                     Column(
                       children: [
                         Image.asset('assets/images/avatar_icon.png', width: 28),
-                        SizedBox(height: 4,),
+                        SizedBox(height: 4),
                         Text(
                           DateFormat('hh:mm').format(message.createdAt),
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 8),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall!.copyWith(fontSize: 8),
                         ),
                       ],
                     ),

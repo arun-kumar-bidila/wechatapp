@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:wechat/core/error/exceptions.dart';
 import 'package:wechat/core/error/failure.dart';
@@ -34,6 +36,22 @@ class ChatRepositoryImpl implements ChatRepository {
       final res = await chatRemoteDatasource.sendTextMessage(
         selectedUserId: selectedUserId,
         message: message,
+      );
+      return right(res);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendImageMessage({
+    required String selectedUserId,
+    required File image,
+  }) async {
+    try {
+      final res = await chatRemoteDatasource.sendImageMessage(
+        selectedUserId: selectedUserId,
+        image: image,
       );
       return right(res);
     } on ServerException catch (e) {
