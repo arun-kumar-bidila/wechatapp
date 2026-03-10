@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/common/widgets/loader.dart';
+import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:wechat/features/chat/presentation/widgets/message_tile.dart';
 
@@ -21,6 +24,17 @@ class PersonalChatPage extends StatefulWidget {
 
 class _PersonalChatPageState extends State<PersonalChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  File? image;
+
+  Future<void> selectImage() async {
+    final pickedImg = await pickImage();
+    if (pickedImg != null) {
+      setState(() {
+        image = pickedImg;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -179,12 +193,31 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                             ),
                           ),
                           SizedBox(width: 16),
-                          SvgPicture.asset(
-                            "assets/icons/gallery_icon.svg",
-                            width: 16,
-                            colorFilter: ColorFilter.mode(
-                              Theme.of(context).colorScheme.secondary,
-                              BlendMode.srcIn,
+                          GestureDetector(
+                            onTap: () async {
+                              final chatBloc = context.read<ChatBloc>();
+                              await selectImage();
+
+                              if (image != null) {
+                                chatBloc.add(
+                                  ChatImageMessageSendEvent(
+                                    selectedUserId: widget.selectedUser.id,
+                                    image: image!,
+                                  ),
+                                );
+                                setState(() {
+                                  image = null;
+                                });
+                                return;
+                              }
+                            },
+                            child: SvgPicture.asset(
+                              "assets/icons/gallery_icon.svg",
+                              width: 16,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.secondary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ],
@@ -197,6 +230,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                       if (_messageController.text.isEmpty) {
                         return;
                       }
+
                       context.read<ChatBloc>().add(
                         ChatTextMessageSendEvent(
                           selectedUserId: widget.selectedUser.id,
@@ -204,7 +238,6 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                         ),
                       );
                       _messageController.clear();
-                      
                     },
                     child: SvgPicture.asset(
                       "assets/icons/send_button.svg",
