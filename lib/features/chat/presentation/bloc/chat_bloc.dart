@@ -32,6 +32,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final message = MessageModel.fromJson(data);
       add(ChatSocketMessageReceivedEvent(message));
     });
+    on<ChatInitializeEvent>(_onChatInitializeEvent);
     on<ChatMessagesFetchEvent>(_onChatMessagesFetch);
     on<ChatTextMessageSendEvent>(_onTextMessageSendEvent);
     on<ChatImageMessageSendEvent>(_onImageMessageSendEvent);
@@ -103,6 +104,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ChatSocketMessageReceivedEvent event,
     Emitter<ChatState> emit,
   ) {
+    if (event.message.senderId != state.selectedUserId) {
+      return;
+    }
     final exists = state.messages.any((m) => m.id == event.message.id);
 
     if (exists) return;
@@ -111,5 +115,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       ..add(event.message);
 
     emit(state.copyWith(messages: updatedMessages));
+  }
+
+  void _onChatInitializeEvent(
+    ChatInitializeEvent event,
+    Emitter<ChatState> emit,
+  ) {
+    emit(state.copyWith(selectedUserId: event.selectedUserId));
   }
 }

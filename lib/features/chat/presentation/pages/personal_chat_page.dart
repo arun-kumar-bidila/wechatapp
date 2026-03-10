@@ -38,9 +38,13 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
   @override
   void initState() {
     super.initState();
+     context.read<ChatBloc>().add(
+      ChatInitializeEvent(selectedUserId: widget.selectedUser.id),
+    );
     context.read<ChatBloc>().add(
       ChatMessagesFetchEvent(selectedUserId: widget.selectedUser.id),
     );
+    
   }
 
   @override

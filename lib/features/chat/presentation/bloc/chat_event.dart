@@ -3,6 +3,11 @@ part of 'chat_bloc.dart';
 @immutable
 sealed class ChatEvent {}
 
+final class ChatInitializeEvent extends ChatEvent {
+  final String selectedUserId;
+  ChatInitializeEvent({required this.selectedUserId});
+}
+
 final class ChatMessagesFetchEvent extends ChatEvent {
   final String selectedUserId;
   ChatMessagesFetchEvent({required this.selectedUserId});
@@ -16,7 +21,6 @@ final class ChatTextMessageSendEvent extends ChatEvent {
     required this.message,
   });
 }
-
 
 final class ChatImageMessageSendEvent extends ChatEvent {
   final String selectedUserId;
