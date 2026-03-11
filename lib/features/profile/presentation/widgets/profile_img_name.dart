@@ -86,7 +86,7 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                             ),
 
                             Text(
-                              user.bio,
+                             '${user.bio} 😊' ,
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],

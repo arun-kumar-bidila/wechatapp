@@ -11,9 +11,6 @@ import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:wechat/features/chat/presentation/widgets/message_tile.dart';
-
-import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
-
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class PersonalChatPage extends StatefulWidget {
@@ -66,6 +63,20 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         leading: Center(
+          child: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back_ios_new_rounded, size: 24),
+          ),
+        ),
+        title: Text(
+          widget.selectedUser.fullName,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        centerTitle: true,
+        actions: [
+          Center(
           child: GestureDetector(
             onTap: () {
               context.push(
@@ -81,7 +92,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
               child: widget.selectedUser.profilePic.isEmpty
                   ? Container(
                       padding: EdgeInsets.all(12),
-                      margin: EdgeInsets.only(left: 16),
+                      margin: EdgeInsets.only(right: 16),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Theme.of(context).colorScheme.surfaceContainer,
@@ -96,7 +107,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                       ),
                     )
                   : Padding(
-                      padding: EdgeInsets.only(left: 16),
+                      padding: EdgeInsets.only(right: 16),
                       child: SizedBox(
                         width: 40,
                         height: 40,
@@ -118,45 +129,6 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             ),
           ),
         ),
-        title: Text(
-          widget.selectedUser.fullName,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        centerTitle: true,
-        actions: [
-          Center(
-            child: BlocConsumer<HomeBloc, HomeState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:
-                              state.onlineUsers.contains(widget.selectedUser.id)
-                              ? Colors.green
-                              : Colors.red,
-                        ),
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        state.onlineUsers.contains(widget.selectedUser.id)
-                            ? 'Online'
-                            : 'Offline',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(8),

@@ -38,41 +38,38 @@ class _ChatTileState extends State<ChatTile> {
 
         child: Row(
           children: [
-            Hero(
-              tag: 'user-profile-${widget.user.id}',
-              child: widget.user.profilePic.isEmpty
-                  ? Container(
-                      padding: EdgeInsets.all(12),
-
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).colorScheme.surfaceContainer,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/icons/profile.svg",
-                        width: 18,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.secondary,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: ClipOval(
-                        child: Image.network(
-                          widget.user.profilePic,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-
-                            return ProfileSkeleton(width: 40, height: 40);
-                          },
-                        ),
+            widget.user.profilePic.isEmpty
+                ? Container(
+                    padding: EdgeInsets.all(12),
+            
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 18,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.secondary,
+                        BlendMode.srcIn,
                       ),
                     ),
-            ),
+                  )
+                : SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: ClipOval(
+                      child: Image.network(
+                        widget.user.profilePic,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+            
+                          return ProfileSkeleton(width: 40, height: 40);
+                        },
+                      ),
+                    ),
+                  ),
             SizedBox(width: 12),
             Expanded(
               child: Column(
