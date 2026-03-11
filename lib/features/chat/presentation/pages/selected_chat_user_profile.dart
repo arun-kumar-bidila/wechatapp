@@ -92,7 +92,7 @@ class _SelectedChatUserProfileState extends State<SelectedChatUserProfile> {
               ),
 
               Text(
-                widget.selectedUser.email,
+                '${widget.selectedUser.bio} 😊',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               SizedBox(height: 24),
@@ -101,10 +101,17 @@ class _SelectedChatUserProfileState extends State<SelectedChatUserProfile> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Media',
+                  'Media 📷',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
+
+              if (images.isEmpty) ...[
+                SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('No files yet !',style: Theme.of(context).textTheme.bodySmall,)),
+              ],
 
               GridView.builder(
                 shrinkWrap: true,
