@@ -24,6 +24,19 @@ class PersonalChatPage extends StatefulWidget {
 
 class _PersonalChatPageState extends State<PersonalChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollToBottom() {
+    
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   File? image;
 
   Future<void> selectImage() async {
@@ -38,13 +51,12 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
   @override
   void initState() {
     super.initState();
-     context.read<ChatBloc>().add(
+    context.read<ChatBloc>().add(
       ChatInitializeEvent(selectedUserId: widget.selectedUser.id),
     );
     context.read<ChatBloc>().add(
       ChatMessagesFetchEvent(selectedUserId: widget.selectedUser.id),
     );
-    
   }
 
   @override
@@ -147,12 +159,17 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             Expanded(
               child: BlocBuilder<ChatBloc, ChatState>(
                 builder: (context, state) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    scrollToBottom();
+                  });
                   if (state.isLoading) {
                     return Loader();
                   }
                   if (state.messages.isNotEmpty) {
                     return ListView.builder(
+                      controller: _scrollController,
                       itemCount: state.messages.length,
+                      
                       itemBuilder: (context, index) {
                         final message = state.messages[index];
                         final isMe = message.senderId != widget.selectedUser.id;
