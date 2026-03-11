@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
@@ -27,7 +28,6 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
   final ScrollController _scrollController = ScrollController();
 
   void scrollToBottom() {
-    
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
@@ -111,8 +111,6 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             ),
           ),
         ),
-        
-
         title: Text(
           widget.selectedUser.fullName,
           style: Theme.of(context).textTheme.titleMedium,
@@ -153,6 +151,10 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             ),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(8),
+          child: Container(height: 1, color: AppColors.greyColor),
+        ),
       ),
 
       body: SafeArea(
@@ -171,7 +173,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                     return ListView.builder(
                       controller: _scrollController,
                       itemCount: state.messages.length,
-                      
+
                       itemBuilder: (context, index) {
                         final message = state.messages[index];
                         final isMe = message.senderId != widget.selectedUser.id;

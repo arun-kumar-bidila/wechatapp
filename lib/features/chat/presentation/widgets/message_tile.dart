@@ -49,10 +49,10 @@ class MessageTile extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(16),
-                      topLeft: Radius.circular(16),
-                      bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
-                      bottomRight: isMe ? Radius.zero : Radius.circular(16),
+                      topRight: Radius.circular(8),
+                      topLeft: Radius.circular(8),
+                      bottomLeft: isMe ? Radius.circular(8) : Radius.zero,
+                      bottomRight: isMe ? Radius.zero : Radius.circular(8),
                     ),
                     color: isMe
                         ? AppColors.appColor
