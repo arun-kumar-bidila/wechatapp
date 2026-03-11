@@ -17,15 +17,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void> _refreshUsers() async {
-    context.read<HomeBloc>().add(HomeOnFetchAllUsers());
-  }
+  final TextEditingController _searchController = TextEditingController();
+  List filteredUsers = [];
 
   @override
   void initState() {
     super.initState();
 
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+    _searchController.addListener(onSearchChanged);
+  }
+
+  Future<void> _refreshUsers() async {
+    context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+  }
+
+  void onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    final state = context.read<HomeBloc>().state;
+
+    if (state.allUsersData == null) return;
+
+    final users = state.allUsersData!.users;
+
+    setState(() {
+      filteredUsers = users.where((user) {
+        return user.fullName.toLowerCase().contains(query);
+      }).toList();
+    });
   }
 
   @override
@@ -140,6 +159,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(width: 16),
                     Expanded(
                       child: TextField(
+                        controller: _searchController,
                         decoration: InputDecoration(
                           hintText: "Search People",
                           hintStyle: Theme.of(context).textTheme.bodySmall,
@@ -169,8 +189,9 @@ class _HomePageState extends State<HomePage> {
                         return Loader();
                       }
                       if (state.allUsersData != null) {
-                        final users = state.allUsersData!.users;
-
+                        final users = _searchController.text.isEmpty
+                            ? state.allUsersData!.users
+                            : filteredUsers;
                         return ListView.builder(
                           itemCount: users.length,
                           itemBuilder: (context, index) {
