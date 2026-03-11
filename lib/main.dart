@@ -49,11 +49,9 @@ class _MyAppState extends State<MyApp> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthUserLoggedIn) {
-          SocketService().connect(state.user.id);
-        }
-
-        if (state is AuthUserLoggedOut) {
-          SocketService().disconnect();
+          serviceLocator<SocketService>().connect(state.user.id);
+        } else if (state is AuthUserLoggedOut) {
+          serviceLocator<SocketService>().disconnect();
         }
       },
       child: BlocBuilder<ThemeCubit, ThemeMode>(

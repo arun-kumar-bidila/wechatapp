@@ -43,8 +43,7 @@ GoRouter createRouter(AuthBloc authBloc) {
       if (authState is AuthUserLoggedOut && !isAuth) {
         return '/login';
       }
-      if (authState is AuthCheckFailure ||
-          authState is AuthUserLoggedOutFailure) {
+      if (authState is AuthCheckFailure ) {
         return '/login';
       }
       return null;

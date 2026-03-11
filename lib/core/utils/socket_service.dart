@@ -18,14 +18,17 @@ class SocketService {
   final ValueNotifier<List<dynamic>> onlineUsers = ValueNotifier([]);
 
   void connect(String userId) {
-    if (socket != null && socket!.connected) return;
+    debugPrint("✅ SOCKET CONNECT USER: $userId");
+
+    socket?.disconnect();
+    socket?.dispose();
 
     socket = IO.io(
       "https://wechat-y4je.onrender.com",
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .disableAutoConnect()
           .setQuery({'userId': userId})
+          .disableAutoConnect()
           .build(),
     );
 
@@ -37,6 +40,7 @@ class SocketService {
 
     socket!.on("getOnlineUsers", (userIds) {
       onlineUsers.value = List.from(userIds);
+      debugPrint("Online Users: ${onlineUsers.value}");
     });
 
     socket!.on("newMessage", (data) {
@@ -45,11 +49,16 @@ class SocketService {
 
     socket!.onDisconnect((_) {
       debugPrint("❌ Disconnected");
+      debugPrint("Online Users: ${onlineUsers.value}");
     });
   }
 
   void disconnect() {
     socket?.disconnect();
+    socket?.dispose();
+
+    socket = null;
+    onlineUsers.value = [];
   }
 
   void dispose() {
