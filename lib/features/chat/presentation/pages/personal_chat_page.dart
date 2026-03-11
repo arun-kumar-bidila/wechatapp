@@ -63,6 +63,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         leading: Center(
           child: GestureDetector(
             onTap: () {
@@ -110,6 +111,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             ),
           ),
         ),
+        
 
         title: Text(
           widget.selectedUser.fullName,

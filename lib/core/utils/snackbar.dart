@@ -15,10 +15,11 @@ void showSnackabr(BuildContext context, String content) {
           ),
         ),
         elevation: 0,
+        duration: Duration(milliseconds: 500),
 
         backgroundColor: AppColors.appColor,
 
-        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
     );
 }
