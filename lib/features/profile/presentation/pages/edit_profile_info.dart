@@ -24,6 +24,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   TextEditingController nameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   File? image;
+  final _formKey = GlobalKey<FormState>();
 
   Future<void> selectImage() async {
     final pickedImg = await pickImage();
@@ -69,86 +70,93 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 30),
-                          Hero(
-                            tag: 'location-profile',
-                            child: image != null
-                                ? SizedBox(
-                                    width: 120,
-                                    height: 120,
-                                    child: ClipOval(
-                                      child: Image.file(
-                                        image!,
-                                        fit: BoxFit.cover,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 30),
+                            Hero(
+                              tag: 'location-profile',
+                              child: image != null
+                                  ? SizedBox(
+                                      width: 120,
+                                      height: 120,
+                                      child: ClipOval(
+                                        child: Image.file(
+                                          image!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                  : state.user.profilePic.isEmpty
+                                  ? Container(
+                                      width: 60,
+                                      height: 60,
+                                      padding: EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.surfaceContainer,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        "assets/icons/profile.svg",
+                                        fit: BoxFit.contain,
+                                        colorFilter: ColorFilter.mode(
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: 120,
+                                      height: 120,
+                                      child: ClipOval(
+                                        child: Image.network(
+                                          state.user.profilePic,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  )
-                                : state.user.profilePic.isEmpty
-                                ? Container(
-                                    width: 60,
-                                    height: 60,
-                                    padding: EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.surfaceContainer,
+                            ),
+                            SizedBox(height: 16),
+                            GestureDetector(
+                              onTap: selectImage,
+                              child: CommonIcon(icon: Icons.add),
+                            ),
+                            SizedBox(height: 24),
+                            CommonTextField(
+                              controller: nameController,
+                              hintText: state.user.fullName,
+                              label: "Name",
+                            ),
+                            SizedBox(height: 24),
+                            CommonTextField(
+                              controller: bioController,
+                              hintText: state.user.bio,
+                              label: "Bio",
+                              maxLines: 2,
+                            ),
+                            SizedBox(height: 24),
+                            CommonButton(
+                              buttonName: 'Update Info',
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<ProfileBloc>().add(
+                                    ProfileUpdateEvent(
+                                      fullName: nameController.text,
+                                      bio: bioController.text,
+                                      image: image,
                                     ),
-                                    child: SvgPicture.asset(
-                                      "assets/icons/profile.svg",
-                                      fit: BoxFit.contain,
-                                      colorFilter: ColorFilter.mode(
-                                        Theme.of(context).colorScheme.secondary,
-                                        BlendMode.srcIn,
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(
-                                    width: 120,
-                                    height: 120,
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        state.user.profilePic,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                          ),
-                          SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: selectImage,
-                            child: CommonIcon(icon: Icons.add),
-                          ),
-                          SizedBox(height: 24),
-                          CommonTextField(
-                            controller: nameController,
-                            hintText: state.user.fullName,
-                            label: "Name",
-                          ),
-                          SizedBox(height: 24),
-                          CommonTextField(
-                            controller: bioController,
-                            hintText: state.user.bio,
-                            label: "Bio",
-                            maxLines: 2,
-                          ),
-                          SizedBox(height: 24),
-                          CommonButton(
-                            buttonName: 'Update Info',
-                            onTap: () {
-                              context.read<ProfileBloc>().add(
-                                ProfileUpdateEvent(
-                                  fullName: nameController.text,
-                                  bio: bioController.text,
-                                  image: image,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

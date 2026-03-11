@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
@@ -31,7 +32,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 100),
+        duration: Duration(milliseconds: 200),
         curve: Curves.easeOut,
       );
     }
@@ -67,7 +68,10 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
         leading: Center(
           child: GestureDetector(
             onTap: () {
-              // context.push('/profile');
+              context.push('/selected-user-profile',extra: {
+                'selectedUser':widget.selectedUser,
+                'messages':context.read<ChatBloc>().state.messages
+              });
             },
             child: Hero(
               tag: 'user-profile-${widget.selectedUser.id}',
