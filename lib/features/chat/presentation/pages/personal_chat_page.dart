@@ -68,10 +68,13 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
         leading: Center(
           child: GestureDetector(
             onTap: () {
-              context.push('/selected-user-profile',extra: {
-                'selectedUser':widget.selectedUser,
-                'messages':context.read<ChatBloc>().state.messages
-              });
+              context.push(
+                '/selected-user-profile',
+                extra: {
+                  'selectedUser': widget.selectedUser,
+                  'messages': context.read<ChatBloc>().state.messages,
+                },
+              );
             },
             child: Hero(
               tag: 'user-profile-${widget.selectedUser.id}',
@@ -183,6 +186,16 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                         final isMe = message.senderId != widget.selectedUser.id;
                         return MessageTile(message: message, isMe: isMe);
                       },
+                    );
+                  }
+                  if (state.messages.isEmpty) {
+                    return 
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Say Hello ! 👋 to ${widget.selectedUser.fullName} ',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     );
                   }
                   return SizedBox();
