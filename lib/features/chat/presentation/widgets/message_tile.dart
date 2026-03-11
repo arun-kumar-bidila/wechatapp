@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wechat/common/theme/app_colors.dart';
+import 'package:wechat/core/utils/snackbar.dart';
 import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 
 class MessageTile extends StatelessWidget {
@@ -47,19 +49,29 @@ class MessageTile extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(16),
-                      topLeft: Radius.circular(16),
-                      bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
-                      bottomRight: isMe ? Radius.zero : Radius.circular(16),
+                      topRight: Radius.circular(8),
+                      topLeft: Radius.circular(8),
+                      bottomLeft: isMe ? Radius.circular(8) : Radius.zero,
+                      bottomRight: isMe ? Radius.zero : Radius.circular(8),
                     ),
                     color: isMe
                         ? AppColors.appColor
                         : Theme.of(context).colorScheme.surfaceContainer,
                   ),
-                  child: Text(
-                    message.text ?? '',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    softWrap: true,
+                  child: GestureDetector(
+                    onLongPress: () {
+                      Clipboard.setData(
+                        ClipboardData(text: message.text ?? ''),
+                      );
+                      showSnackabr(context, 'Copied !');
+                    },
+
+                    child: Text(
+                      message.text ?? '',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: isMe ? AppColors.white : null,
+                      ),
+                    ),
                   ),
                 )
               : ClipRRect(

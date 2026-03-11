@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wechat/core/utils/socket_service.dart';
+import 'package:wechat/features/chat/data/models/message_model.dart';
 import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 import 'package:wechat/features/chat/domain/usecases/chat_messages_fetch_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_image_message_usecase.dart';
@@ -14,18 +16,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatMessagesFetchUsecase _chatMessagesFetchUsecase;
   final SendTextMessageUsecase _sendTextMessageUsecase;
   final SendImageMessageUsecase _sendImageMessageUsecase;
+  final SocketService _socketService;
 
   ChatBloc({
     required ChatMessagesFetchUsecase chatMessagesFetchUsecase,
     required SendTextMessageUsecase sendTextMessageUsecase,
     required SendImageMessageUsecase sendImageMessageUsecase,
+    required SocketService socketService,
   }) : _chatMessagesFetchUsecase = chatMessagesFetchUsecase,
        _sendTextMessageUsecase = sendTextMessageUsecase,
        _sendImageMessageUsecase = sendImageMessageUsecase,
+       _socketService = socketService,
        super(const ChatState()) {
+    _socketService.messageStreamController.stream.listen((data) {
+      final message = MessageModel.fromJson(data);
+      add(ChatSocketMessageReceivedEvent(message));
+    });
+    on<ChatInitializeEvent>(_onChatInitializeEvent);
     on<ChatMessagesFetchEvent>(_onChatMessagesFetch);
     on<ChatTextMessageSendEvent>(_onTextMessageSendEvent);
     on<ChatImageMessageSendEvent>(_onImageMessageSendEvent);
+    on<ChatSocketMessageReceivedEvent>(_onSocketMessageReceived);
   }
 
   void _onChatMessagesFetch(
@@ -57,10 +68,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         message: event.message,
       ),
     );
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (_) {},
-    );
+    result.fold((failure) => emit(state.copyWith(error: failure.message)), (r) {
+      final exists = state.messages.any((m) => m.id == r.id);
+
+      if (exists) return;
+
+      final updatedMessages = List<MessageEntity>.from(state.messages)..add(r);
+
+      emit(state.copyWith(messages: updatedMessages));
+    });
   }
 
   void _onImageMessageSendEvent(
@@ -73,9 +89,38 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         image: event.image,
       ),
     );
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (_) {},
-    );
+    result.fold((failure) => emit(state.copyWith(error: failure.message)), (r) {
+      final exists = state.messages.any((m) => m.id == r.id);
+
+      if (exists) return;
+
+      final updatedMessages = List<MessageEntity>.from(state.messages)..add(r);
+
+      emit(state.copyWith(messages: updatedMessages));
+    });
+  }
+
+  void _onSocketMessageReceived(
+    ChatSocketMessageReceivedEvent event,
+    Emitter<ChatState> emit,
+  ) {
+    if (event.message.senderId != state.selectedUserId) {
+      return;
+    }
+    final exists = state.messages.any((m) => m.id == event.message.id);
+
+    if (exists) return;
+
+    final updatedMessages = List<MessageEntity>.from(state.messages)
+      ..add(event.message);
+
+    emit(state.copyWith(messages: updatedMessages));
+  }
+
+  void _onChatInitializeEvent(
+    ChatInitializeEvent event,
+    Emitter<ChatState> emit,
+  ) {
+    emit(state.copyWith(selectedUserId: event.selectedUserId));
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_theme.dart';
 import 'package:wechat/common/theme/theme_cubit.dart';
-import 'package:wechat/core/router/router.dart';
+import 'package:wechat/core/router/app_router.dart';
 import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';

@@ -3,14 +3,15 @@ import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:wechat/common/usecase/usecase.dart';
 import 'package:wechat/core/error/failure.dart';
+import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 import 'package:wechat/features/chat/domain/repository/chat_repository.dart';
 
 class SendImageMessageUsecase
-    implements Usecase<void, SendImageMessageUsecaseParams> {
+    implements Usecase<MessageEntity, SendImageMessageUsecaseParams> {
   final ChatRepository chatRepository;
   SendImageMessageUsecase(this.chatRepository);
   @override
-  Future<Either<Failure, void>> call(
+  Future<Either<Failure, MessageEntity>> call(
     SendImageMessageUsecaseParams params,
   ) async {
     return await chatRepository.sendImageMessage(

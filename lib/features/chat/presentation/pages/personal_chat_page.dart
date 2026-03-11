@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
@@ -24,6 +26,18 @@ class PersonalChatPage extends StatefulWidget {
 
 class _PersonalChatPageState extends State<PersonalChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   File? image;
 
   Future<void> selectImage() async {
@@ -39,6 +53,9 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
   void initState() {
     super.initState();
     context.read<ChatBloc>().add(
+      ChatInitializeEvent(selectedUserId: widget.selectedUser.id),
+    );
+    context.read<ChatBloc>().add(
       ChatMessagesFetchEvent(selectedUserId: widget.selectedUser.id),
     );
   }
@@ -47,10 +64,17 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         leading: Center(
           child: GestureDetector(
             onTap: () {
-              // context.push('/profile');
+              context.push(
+                '/selected-user-profile',
+                extra: {
+                  'selectedUser': widget.selectedUser,
+                  'messages': context.read<ChatBloc>().state.messages,
+                },
+              );
             },
             child: Hero(
               tag: 'user-profile-${widget.selectedUser.id}',
@@ -94,7 +118,6 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             ),
           ),
         ),
-
         title: Text(
           widget.selectedUser.fullName,
           style: Theme.of(context).textTheme.titleMedium,
@@ -135,6 +158,10 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             ),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(8),
+          child: Container(height: 1, color: AppColors.greyColor),
+        ),
       ),
 
       body: SafeArea(
@@ -143,17 +170,32 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
             Expanded(
               child: BlocBuilder<ChatBloc, ChatState>(
                 builder: (context, state) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    scrollToBottom();
+                  });
                   if (state.isLoading) {
                     return Loader();
                   }
                   if (state.messages.isNotEmpty) {
                     return ListView.builder(
+                      controller: _scrollController,
                       itemCount: state.messages.length,
+
                       itemBuilder: (context, index) {
                         final message = state.messages[index];
                         final isMe = message.senderId != widget.selectedUser.id;
                         return MessageTile(message: message, isMe: isMe);
                       },
+                    );
+                  }
+                  if (state.messages.isEmpty) {
+                    return 
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Say Hello ! 👋 to ${widget.selectedUser.fullName} ',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     );
                   }
                   return SizedBox();

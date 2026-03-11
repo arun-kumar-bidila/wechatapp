@@ -28,7 +28,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> sendTextMessage({
+  Future<Either<Failure, MessageEntity>> sendTextMessage({
     required String selectedUserId,
     required String message,
   }) async {
@@ -44,7 +44,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> sendImageMessage({
+  Future<Either<Failure, MessageEntity>> sendImageMessage({
     required String selectedUserId,
     required File image,
   }) async {

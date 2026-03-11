@@ -6,6 +6,7 @@ import 'package:wechat/features/auth/presentation/pages/add_bio_page.dart';
 import 'package:wechat/features/auth/presentation/pages/login_page.dart';
 import 'package:wechat/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:wechat/features/chat/presentation/pages/personal_chat_page.dart';
+import 'package:wechat/features/chat/presentation/pages/selected_chat_user_profile.dart';
 import 'package:wechat/features/home/presentation/pages/home_page.dart';
 import 'package:wechat/features/profile/presentation/pages/edit_profile_info.dart';
 import 'package:wechat/features/profile/presentation/pages/profile_page.dart';
@@ -75,6 +76,15 @@ GoRouter createRouter(AuthBloc authBloc) {
         builder: (context, state) {
           final selectedUser = state.extra as User;
           return PersonalChatPage(selectedUser: selectedUser);
+        },
+      ),
+      GoRoute(
+        path: '/selected-user-profile',
+        builder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          final selectedUser = data['selectedUser'];
+          final messages = data['messages'];
+          return SelectedChatUserProfile(selectedUser: selectedUser,messages: messages,);
         },
       ),
     ],

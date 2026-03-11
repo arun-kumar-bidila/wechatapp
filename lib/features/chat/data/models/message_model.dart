@@ -2,6 +2,7 @@ import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 
 class MessageModel extends MessageEntity {
   MessageModel({
+    required super.id,
     required super.senderId,
     required super.receiverId,
     super.text,
@@ -12,6 +13,7 @@ class MessageModel extends MessageEntity {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
+      id: json['_id'],
       senderId: json['senderId'],
       receiverId: json['receiverId'],
       text: json['text'],

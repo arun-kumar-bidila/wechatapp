@@ -18,22 +18,26 @@ class ChatState {
   final bool isLoading;
   final String? error;
   final List<MessageEntity> messages;
+  final String? selectedUserId;
 
   const ChatState({
     this.isLoading = false,
     this.error,
     this.messages = const [],
+     this.selectedUserId
   });
 
   ChatState copyWith({
     bool? isLoading,
     String? error,
     List<MessageEntity>? messages,
+    String? selectedUserId
   }) {
     return ChatState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       messages: messages ?? this.messages,
+      selectedUserId: selectedUserId ?? this.selectedUserId
     );
   }
 }

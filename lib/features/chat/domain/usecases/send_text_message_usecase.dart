@@ -1,14 +1,15 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:wechat/common/usecase/usecase.dart';
 import 'package:wechat/core/error/failure.dart';
+import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 import 'package:wechat/features/chat/domain/repository/chat_repository.dart';
 
 class SendTextMessageUsecase
-    implements Usecase<void, SendTextMessageUsecaseParams> {
+    implements Usecase<MessageEntity, SendTextMessageUsecaseParams> {
   final ChatRepository chatRepository;
   SendTextMessageUsecase(this.chatRepository);
   @override
-  Future<Either<Failure, void>> call(
+  Future<Either<Failure, MessageEntity>> call(
     SendTextMessageUsecaseParams params,
   ) async {
     return await chatRepository.sendTextMessage(

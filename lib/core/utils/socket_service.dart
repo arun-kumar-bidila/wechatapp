@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -10,10 +12,12 @@ class SocketService {
 
   IO.Socket? socket;
 
+  final StreamController<dynamic> messageStreamController =
+      StreamController.broadcast();
+
   final ValueNotifier<List<dynamic>> onlineUsers = ValueNotifier([]);
 
   void connect(String userId) {
-
     if (socket != null && socket!.connected) return;
 
     socket = IO.io(
@@ -35,13 +39,20 @@ class SocketService {
       onlineUsers.value = List.from(userIds);
     });
 
+    socket!.on("newMessage", (data) {
+      messageStreamController.add(data);
+    });
+
     socket!.onDisconnect((_) {
       debugPrint("❌ Disconnected");
     });
-
   }
 
   void disconnect() {
     socket?.disconnect();
+  }
+
+  void dispose() {
+    messageStreamController.close();
   }
 }
