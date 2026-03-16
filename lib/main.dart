@@ -39,19 +39,23 @@ class _MyAppState extends State<MyApp> {
   late final GoRouter _router;
   @override
   void initState() {
-    _router = createRouter(serviceLocator<AuthBloc>());
-    serviceLocator<AuthBloc>().add(AuthCheck());
     super.initState();
+    final authBloc = serviceLocator<AuthBloc>();
+    _router = createRouter(authBloc);
+
+    authBloc.add(AuthCheck());
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        final socketService = serviceLocator<SocketService>();
         if (state is AuthUserLoggedIn) {
-          serviceLocator<SocketService>().connect(state.user.id);
+          debugPrint(state.user.id);
+          socketService.connect(state.user.id);
         } else if (state is AuthUserLoggedOut) {
-          serviceLocator<SocketService>().disconnect();
+          socketService.disconnect();
         }
       },
       child: BlocBuilder<ThemeCubit, ThemeMode>(

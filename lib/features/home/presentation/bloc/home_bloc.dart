@@ -23,6 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
        super(HomeState()) {
     _socketService.onlineUsers.addListener(() {
       add(HomeOnlineUsersUpdated(_socketService.onlineUsers.value));
+       print("ONLINE USERS CHANGED: ${_socketService.onlineUsers.value}");
     });
     _socketService.messageStreamController.stream.listen((data) {
       final message = MessageModel.fromJson(data);
