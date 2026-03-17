@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
@@ -44,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthLoginSuccess) {
+                context.read<AppUserCubit>().updateUser(state.user);
                 showSnackabr(context, "Login Success");
               }
             },

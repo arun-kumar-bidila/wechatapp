@@ -45,7 +45,7 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => dio);
   serviceLocator.registerLazySingleton(() => storage);
   serviceLocator.registerLazySingleton<SocketService>(() => SocketService());
-  serviceLocator.registerLazySingleton(() => AppUserCubit());
+  serviceLocator.registerFactory(() => AppUserCubit());
   _initAuth();
   _initProfile();
   _initHome();
@@ -64,13 +64,12 @@ void _initAuth() {
     ..registerFactory(() => LoginUseCase(serviceLocator()))
     ..registerFactory(() => CheckAuthCase(serviceLocator()))
     ..registerFactory(() => LogoutUserUsecase(serviceLocator()))
-    ..registerLazySingleton(
+    ..registerFactory(
       () => AuthBloc(
         signUpUseCase: serviceLocator(),
         loginUseCase: serviceLocator(),
         checkAuthCase: serviceLocator(),
         logoutUserUsecase: serviceLocator(),
-        appUserCubit: serviceLocator()
       ),
     );
 }
@@ -84,9 +83,7 @@ void _initProfile() {
       () => ProfileRepositoryImpl(serviceLocator()),
     )
     ..registerFactory(() => UpdateUserUsecase(serviceLocator()))
-    ..registerLazySingleton(
-      () => ProfileBloc(updateUserUsecase: serviceLocator()),
-    );
+    ..registerFactory(() => ProfileBloc(updateUserUsecase: serviceLocator()));
 }
 
 void _initHome() {
@@ -98,7 +95,7 @@ void _initHome() {
       () => HomeRepositoryImpl(serviceLocator()),
     )
     ..registerFactory(() => GetAllUsersUsecase(serviceLocator()))
-    ..registerLazySingleton(
+    ..registerFactory(
       () => HomeBloc(
         getAllUsersUsecase: serviceLocator(),
         socketService: serviceLocator(),
@@ -117,7 +114,7 @@ void _initChat() {
     ..registerFactory(() => ChatMessagesFetchUsecase(serviceLocator()))
     ..registerFactory(() => SendTextMessageUsecase(serviceLocator()))
     ..registerFactory(() => SendImageMessageUsecase(serviceLocator()))
-    ..registerLazySingleton(
+    ..registerFactory(
       () => ChatBloc(
         chatMessagesFetchUsecase: serviceLocator(),
         sendTextMessageUsecase: serviceLocator(),

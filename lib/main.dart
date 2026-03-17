@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final appUserCubit = serviceLocator<AppUserCubit>();
+    final appUserCubit = context.read<AppUserCubit>();
     _router = createRouter(appUserCubit);
 
     context.read<AuthBloc>().add(AuthCheck());
@@ -50,16 +50,36 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AppUserCubit, AppUserState>(
-      listener: (context, state) {
-        final socketService = serviceLocator<SocketService>();
-        if (state is AppUserLoggedIn) {
-          debugPrint(state.user.id);
-          socketService.connect(state.user.id);
-        } else if (state is AppUserLoggedOut) {
-          socketService.disconnect();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthCheckSuccess) {
+              context.read<AppUserCubit>().updateUser(state.user);
+            }
+
+            if (state is AuthCheckFailure) {
+              context.read<AppUserCubit>().updateUser(null);
+            }
+          },
+        ),
+        BlocListener<AppUserCubit, AppUserState>(
+          listener: (context, state) {
+            final socketService = serviceLocator<SocketService>();
+            if (state is AppUserLoggedIn) {
+              debugPrint(state.user.id);
+              socketService.connect(state.user.id);
+            } else if (state is AppUserLoggedOut) {
+              socketService.disconnect();
+
+              context.read<HomeBloc>().add(HomeResetEvent());
+              context.read<ChatBloc>().add(ChatResetEvent());
+              context.read<ProfileBloc>().add(ProfileResetEvent());
+              context.read<AuthBloc>().add(AuthResetEvent());
+            }
+          },
+        ),
+      ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {
           return MaterialApp.router(

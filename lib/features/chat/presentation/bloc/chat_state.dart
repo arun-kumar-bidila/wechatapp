@@ -24,20 +24,29 @@ class ChatState {
     this.isLoading = false,
     this.error,
     this.messages = const [],
-     this.selectedUserId
+    this.selectedUserId,
   });
 
   ChatState copyWith({
     bool? isLoading,
     String? error,
     List<MessageEntity>? messages,
-    String? selectedUserId
+    String? selectedUserId,
   }) {
     return ChatState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       messages: messages ?? this.messages,
-      selectedUserId: selectedUserId ?? this.selectedUserId
+      selectedUserId: selectedUserId ?? this.selectedUserId,
+    );
+  }
+
+  factory ChatState.initial() {
+    return const ChatState(
+      isLoading: false,
+      error: null,
+      messages: [],
+      selectedUserId: null,
     );
   }
 }

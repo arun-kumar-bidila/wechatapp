@@ -37,6 +37,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatTextMessageSendEvent>(_onTextMessageSendEvent);
     on<ChatImageMessageSendEvent>(_onImageMessageSendEvent);
     on<ChatSocketMessageReceivedEvent>(_onSocketMessageReceived);
+    on<ChatResetEvent>((event, emit) {
+      emit(ChatState.initial());
+    });
   }
 
   void _onChatMessagesFetch(

@@ -17,7 +17,6 @@ final class AuthSignUpSuccess extends AuthState {
   AuthSignUpSuccess(this.user);
 }
 
-
 final class AuthLoginLoading extends AuthState {}
 
 final class AuthLoginFailure extends AuthState {
@@ -34,7 +33,12 @@ final class AuthCheckLoading extends AuthState {}
 
 final class AuthCheckFailure extends AuthState {}
 
-final class AuthUserLoggedOut extends AuthState {}
+final class AuthCheckSuccess extends AuthState {
+  final User user;
+  AuthCheckSuccess(this.user);
+}
+
+final class AuthUserLoggedOutSuccess extends AuthState {}
 
 final class AuthUserLoggedOutLoading extends AuthState {}
 

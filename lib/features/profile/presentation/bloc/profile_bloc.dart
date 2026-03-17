@@ -13,6 +13,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     : _updateUserUsecase = updateUserUsecase,
       super(ProfileInitial()) {
     on<ProfileUpdateEvent>(_onProfileUpdate);
+    on<ProfileResetEvent>((event, emit) {
+      emit(ProfileInitial());
+    });
   }
 
   void _onProfileUpdate(

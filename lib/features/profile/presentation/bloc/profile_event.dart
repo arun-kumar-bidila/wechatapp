@@ -9,3 +9,4 @@ class ProfileUpdateEvent extends ProfileEvent {
   final File? image;
   ProfileUpdateEvent({required this.fullName, required this.bio, this.image});
 }
+class ProfileResetEvent extends ProfileEvent {}

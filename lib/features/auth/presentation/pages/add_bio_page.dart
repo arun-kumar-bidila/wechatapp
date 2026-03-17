@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
@@ -45,8 +45,8 @@ class _AddBioPageState extends State<AddBioPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthSignUpSuccess) {
-                  showSnackabr(context, "SignUp Success");
-                
+                context.read<AppUserCubit>().updateUser(state.user);
+                showSnackabr(context, "SignUp Success");
               }
             },
             buildWhen: (previous, current) =>

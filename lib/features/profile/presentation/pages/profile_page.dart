@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
+import 'package:wechat/core/utils/snackbar.dart';
 
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_feature.dart';
@@ -31,34 +32,36 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text("Profile", style: Theme.of(context).textTheme.titleMedium),
       ),
       body: SafeArea(
-        child: BlocBuilder<AppUserCubit, AppUserState>(
-          builder: (context, state) {
-            
-            if (state is AppUserLoggedIn) {
-              return Column(
-                children: [
-                  ProfileImgName(),
-
-                  ProfileFeature(
-                    featureName: "Password",
-                    featureDesc: "Change your Password",
-                    icon: Icons.visibility_outlined,
-                  ),
-                  ThemeSwitch(),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: CommonButton(
-                      buttonName: "LogOut",
-                      onTap: () {
-                        context.read<AuthBloc>().add(AuthUserLoggedOutEvent());
-                      },
-                    ),
-                  ),
-                ],
-              );
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthUserLoggedOutSuccess) {
+              context.read<AppUserCubit>().updateUser(null);
+              showSnackabr(context, 'logout success');
             }
-            return SizedBox.shrink();
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                ProfileImgName(),
+
+                ProfileFeature(
+                  featureName: "Password",
+                  featureDesc: "Change your Password",
+                  icon: Icons.visibility_outlined,
+                ),
+                ThemeSwitch(),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: CommonButton(
+                    buttonName: "LogOut",
+                    onTap: () {
+                      context.read<AuthBloc>().add(AuthUserLoggedOutEvent());
+                    },
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),
