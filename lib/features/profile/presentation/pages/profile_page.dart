@@ -36,9 +36,10 @@ class _ProfilePageState extends State<ProfilePage> {
           listener: (context, state) {
             if (state is AuthUserLoggedOutSuccess) {
               context.read<AppUserCubit>().updateUser(null);
-              showSnackabr(context, 'logout success');
+              // showSnackabr(context, 'logout success');
             }
           },
+          buildWhen: (previous, current) => current is AuthUserLoggedOutFailure,
           builder: (context, state) {
             return Column(
               children: [

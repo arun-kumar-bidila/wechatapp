@@ -46,7 +46,7 @@ class _AddBioPageState extends State<AddBioPage> {
             listener: (context, state) {
               if (state is AuthSignUpSuccess) {
                 context.read<AppUserCubit>().updateUser(state.user);
-                showSnackabr(context, "SignUp Success");
+                // showSnackabr(context, "SignUp Success");
               }
             },
             buildWhen: (previous, current) =>

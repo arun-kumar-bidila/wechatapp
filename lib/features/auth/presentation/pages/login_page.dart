@@ -46,9 +46,10 @@ class _LoginPageState extends State<LoginPage> {
             listener: (context, state) {
               if (state is AuthLoginSuccess) {
                 context.read<AppUserCubit>().updateUser(state.user);
-                showSnackabr(context, "Login Success");
+                // showSnackabr(context, "Login Success");
               }
             },
+            buildWhen: (previous, current) => current is AuthLoginFailure || current is AuthLoginLoading ,
 
             builder: (context, state) {
               if (state is AuthLoginLoading) {

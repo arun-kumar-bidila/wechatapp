@@ -26,6 +26,7 @@ class SocketService {
           .setTransports(['websocket'])
           .setQuery({'userId': userId})
           .disableAutoConnect()
+          .enableForceNew()
           .build(),
     );
 
