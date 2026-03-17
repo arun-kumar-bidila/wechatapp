@@ -7,8 +7,6 @@ import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
 import 'package:wechat/common/widgets/loader.dart';
 
-import 'package:wechat/core/utils/snackbar.dart';
-
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
 class AddBioPage extends StatefulWidget {
