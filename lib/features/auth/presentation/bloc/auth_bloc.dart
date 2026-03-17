@@ -27,13 +27,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
        _logoutUserUsecase = logoutUserUsecase,
 
        super(AuthInitial()) {
-    on<AuthUserSignUpEvent>(_onUserSighUo);
+    on<AuthUserSignUpEvent>(_onUserSignUp);
     on<AuthUserLoginEvent>(_onUserLogin);
     on<AuthCheck>(_onAuthCheck);
     on<AuthUserLoggedOutEvent>(_onUserLoggedOut);
+    on<AuthResetEvent>((event, emit) {
+      emit(AuthInitial());
+    });
   }
 
-  void _onUserSighUo(AuthUserSignUpEvent event, Emitter<AuthState> emit) async {
+  void _onUserSignUp(AuthUserSignUpEvent event, Emitter<AuthState> emit) async {
     emit(AuthSignUpLoading());
     final res = await _signUpUseCase(
       SignUpUseCaseParams(
@@ -43,10 +46,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         bio: event.bio,
       ),
     );
-    res.fold(
-      (l) => emit(AuthSignUpFailure(l.message)),
-      (r) => emit(AuthUserLoggedIn(r)),
-    );
+
+    res.fold((l) => emit(AuthSignUpFailure(l.message)), (r) {
+      emit(AuthSignUpSuccess(r));
+    });
   }
 
   void _onUserLogin(AuthUserLoginEvent event, Emitter<AuthState> emit) async {
@@ -54,16 +57,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final res = await _loginUseCase(
       LoginUseCaseParams(email: event.email, password: event.password),
     );
-    res.fold(
-      (l) => emit(AuthLoginFailure(l.message)),
-      (r) => emit(AuthUserLoggedIn(r)),
-    );
+    res.fold((l) => emit(AuthLoginFailure(l.message)), (r) {
+      emit(AuthLoginSuccess(r));
+    });
   }
 
   void _onAuthCheck(AuthCheck event, Emitter<AuthState> emit) async {
     emit(AuthCheckLoading());
     final res = await _checkAuthCase(NoParams());
-    res.fold((l) => emit(AuthCheckFailure()), (r) => emit(AuthUserLoggedIn(r)));
+    res.fold((l) => emit(AuthCheckFailure()), (r) {
+      emit(AuthCheckSuccess(r));
+    });
   }
 
   void _onUserLoggedOut(
@@ -73,8 +77,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthUserLoggedOutLoading());
     final res = await _logoutUserUsecase(NoParams());
     res.fold(
-      (l) => emit(AuthUserLoggedOutFailure(l.message)),
-      (r) => emit(AuthUserLoggedOut()),
+      (l) {
+        emit(AuthUserLoggedOutFailure(l.message));
+      },
+      (r) {
+        emit(AuthUserLoggedOutSuccess());
+      },
     );
   }
 }

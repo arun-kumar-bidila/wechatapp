@@ -21,3 +21,5 @@ class HomeResetUnseenEvent extends HomeEvent {
   final String selectedUserId;
   HomeResetUnseenEvent({required this.selectedUserId});
 }
+
+class HomeResetEvent extends HomeEvent {}

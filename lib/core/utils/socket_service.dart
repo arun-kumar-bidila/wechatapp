@@ -4,11 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
-  static final SocketService _instance = SocketService._internal();
-
-  factory SocketService() => _instance;
-
-  SocketService._internal();
+  SocketService();
 
   IO.Socket? socket;
 
@@ -18,14 +14,19 @@ class SocketService {
   final ValueNotifier<List<dynamic>> onlineUsers = ValueNotifier([]);
 
   void connect(String userId) {
-    if (socket != null && socket!.connected) return;
+    debugPrint("✅ SOCKET CONNECT USER: $userId");
+
+    socket?.disconnect();
+    socket?.dispose();
 
     socket = IO.io(
       "https://wechat-y4je.onrender.com",
+      // "http://192.168.0.241:5000",
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .disableAutoConnect()
           .setQuery({'userId': userId})
+          .disableAutoConnect()
+          .enableForceNew()
           .build(),
     );
 
@@ -37,6 +38,7 @@ class SocketService {
 
     socket!.on("getOnlineUsers", (userIds) {
       onlineUsers.value = List.from(userIds);
+      debugPrint("Online Users: ${onlineUsers.value}");
     });
 
     socket!.on("newMessage", (data) {
@@ -45,11 +47,16 @@ class SocketService {
 
     socket!.onDisconnect((_) {
       debugPrint("❌ Disconnected");
+      onlineUsers.value = [];
     });
   }
 
   void disconnect() {
     socket?.disconnect();
+    socket?.dispose();
+
+    socket = null;
+    onlineUsers.value = [];
   }
 
   void dispose() {

@@ -36,3 +36,6 @@ class ChatSocketMessageReceivedEvent extends ChatEvent {
 
   ChatSocketMessageReceivedEvent(this.message);
 }
+
+
+class ChatResetEvent extends ChatEvent {}

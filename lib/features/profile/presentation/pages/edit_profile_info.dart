@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_icon.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
@@ -64,9 +65,9 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
             if (state is ProfileUptadeLoading) {
               return Loader();
             }
-            return BlocBuilder<AuthBloc, AuthState>(
+            return BlocBuilder<AppUserCubit, AppUserState>(
               builder: (context, state) {
-                if (state is AuthUserLoggedIn) {
+                if (state is AppUserLoggedIn) {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(

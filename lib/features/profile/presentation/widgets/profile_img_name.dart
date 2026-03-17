@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/widgets/common_icon.dart';
-import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class ProfileImgName extends StatefulWidget {
@@ -16,9 +16,9 @@ class ProfileImgName extends StatefulWidget {
 class _ProfileImgNameState extends State<ProfileImgName> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<AppUserCubit, AppUserState>(
       builder: (context, state) {
-        if (state is AuthUserLoggedIn) {
+        if (state is AppUserLoggedIn) {
           final user = state.user;
           return Padding(
             padding: const EdgeInsets.all(16),

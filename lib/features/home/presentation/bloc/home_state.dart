@@ -44,7 +44,16 @@ class HomeState {
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       allUsersData: allUsersData ?? this.allUsersData,
-       onlineUsers: onlineUsers ?? this.onlineUsers,
+      onlineUsers: onlineUsers ?? this.onlineUsers,
+    );
+  }
+
+  factory HomeState.initial() {
+    return const HomeState(
+      isLoading: false,
+      error: null,
+      allUsersData: null,
+      onlineUsers: [],
     );
   }
 }

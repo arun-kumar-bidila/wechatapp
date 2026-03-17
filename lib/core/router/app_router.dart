@@ -1,23 +1,24 @@
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/core/router/go_router_refresh_stream.dart';
 import 'package:wechat/common/entities/user.dart';
-import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/auth/presentation/pages/add_bio_page.dart';
 import 'package:wechat/features/auth/presentation/pages/login_page.dart';
 import 'package:wechat/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:wechat/features/chat/presentation/pages/personal_chat_page.dart';
 import 'package:wechat/features/chat/presentation/pages/selected_chat_user_profile.dart';
 import 'package:wechat/features/home/presentation/pages/home_page.dart';
+import 'package:wechat/features/profile/presentation/pages/change_password.dart';
 import 'package:wechat/features/profile/presentation/pages/edit_profile_info.dart';
 import 'package:wechat/features/profile/presentation/pages/profile_page.dart';
 import 'package:wechat/splash_screen.dart';
 
-GoRouter createRouter(AuthBloc authBloc) {
+GoRouter createRouter(AppUserCubit appUserCubit) {
   return GoRouter(
     initialLocation: "/splash",
-    refreshListenable: GoRouterRefreshStream(authBloc.stream),
+    refreshListenable: GoRouterRefreshStream(appUserCubit.stream),
     redirect: (context, state) {
-      final authState = authBloc.state;
+      final appUserState = appUserCubit.state;
       final location = state.matchedLocation;
 
       final isPublic =
@@ -33,20 +34,17 @@ GoRouter createRouter(AuthBloc authBloc) {
 
       final isSplash = location == '/splash';
 
-      if (authState is AuthInitial) {
+      if (appUserState is AppUserInitial) {
         return isSplash ? null : '/splash';
       }
 
-      if (authState is AuthUserLoggedIn && isPublic) {
+      if (appUserState is AppUserLoggedIn && isPublic) {
         return '/home';
       }
-      if (authState is AuthUserLoggedOut && !isAuth) {
+      if (appUserState is AppUserLoggedOut && !isAuth) {
         return '/login';
       }
-      if (authState is AuthCheckFailure ||
-          authState is AuthUserLoggedOutFailure) {
-        return '/login';
-      }
+
       return null;
     },
     routes: [
@@ -84,7 +82,16 @@ GoRouter createRouter(AuthBloc authBloc) {
           final data = state.extra as Map<String, dynamic>;
           final selectedUser = data['selectedUser'];
           final messages = data['messages'];
-          return SelectedChatUserProfile(selectedUser: selectedUser,messages: messages,);
+          return SelectedChatUserProfile(
+            selectedUser: selectedUser,
+            messages: messages,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/change-password',
+        builder: (context, state) {
+          return ChangePassword();
         },
       ),
     ],

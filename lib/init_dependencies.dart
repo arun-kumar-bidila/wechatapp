@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/data/datasources/auth_datasource.dart';
 import 'package:wechat/features/auth/data/repository/auth_repository_impl.dart';
@@ -34,6 +35,7 @@ Future<void> initDependencies() async {
   final dio = Dio(
     BaseOptions(
       baseUrl: "https://wechat-y4je.onrender.com",
+      // baseUrl: "http://192.168.0.241:5000",
       headers: {"Content-Type": "application/json"},
       validateStatus: (status) => true,
     ),
@@ -43,6 +45,7 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => dio);
   serviceLocator.registerLazySingleton(() => storage);
   serviceLocator.registerLazySingleton<SocketService>(() => SocketService());
+  serviceLocator.registerFactory(() => AppUserCubit());
   _initAuth();
   _initProfile();
   _initHome();
@@ -61,7 +64,7 @@ void _initAuth() {
     ..registerFactory(() => LoginUseCase(serviceLocator()))
     ..registerFactory(() => CheckAuthCase(serviceLocator()))
     ..registerFactory(() => LogoutUserUsecase(serviceLocator()))
-    ..registerLazySingleton(
+    ..registerFactory(
       () => AuthBloc(
         signUpUseCase: serviceLocator(),
         loginUseCase: serviceLocator(),
@@ -80,9 +83,7 @@ void _initProfile() {
       () => ProfileRepositoryImpl(serviceLocator()),
     )
     ..registerFactory(() => UpdateUserUsecase(serviceLocator()))
-    ..registerLazySingleton(
-      () => ProfileBloc(updateUserUsecase: serviceLocator()),
-    );
+    ..registerFactory(() => ProfileBloc(updateUserUsecase: serviceLocator()));
 }
 
 void _initHome() {
@@ -94,7 +95,7 @@ void _initHome() {
       () => HomeRepositoryImpl(serviceLocator()),
     )
     ..registerFactory(() => GetAllUsersUsecase(serviceLocator()))
-    ..registerLazySingleton(
+    ..registerFactory(
       () => HomeBloc(
         getAllUsersUsecase: serviceLocator(),
         socketService: serviceLocator(),
@@ -113,7 +114,7 @@ void _initChat() {
     ..registerFactory(() => ChatMessagesFetchUsecase(serviceLocator()))
     ..registerFactory(() => SendTextMessageUsecase(serviceLocator()))
     ..registerFactory(() => SendImageMessageUsecase(serviceLocator()))
-    ..registerLazySingleton(
+    ..registerFactory(
       () => ChatBloc(
         chatMessagesFetchUsecase: serviceLocator(),
         sendTextMessageUsecase: serviceLocator(),
