@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
-import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';

@@ -44,10 +44,15 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 ProfileImgName(),
 
-                ProfileFeature(
-                  featureName: "Password",
-                  featureDesc: "Change your Password",
-                  icon: Icons.visibility_outlined,
+                GestureDetector(
+                  onTap: () {
+                    context.push('/change-password');
+                  },
+                  child: ProfileFeature(
+                    featureName: "Password",
+                    featureDesc: "Change your Password",
+                    icon: Icons.visibility_outlined,
+                  ),
                 ),
                 ThemeSwitch(),
                 Spacer(),

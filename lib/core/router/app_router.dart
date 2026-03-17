@@ -8,6 +8,7 @@ import 'package:wechat/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:wechat/features/chat/presentation/pages/personal_chat_page.dart';
 import 'package:wechat/features/chat/presentation/pages/selected_chat_user_profile.dart';
 import 'package:wechat/features/home/presentation/pages/home_page.dart';
+import 'package:wechat/features/profile/presentation/pages/change_password.dart';
 import 'package:wechat/features/profile/presentation/pages/edit_profile_info.dart';
 import 'package:wechat/features/profile/presentation/pages/profile_page.dart';
 import 'package:wechat/splash_screen.dart';
@@ -43,7 +44,7 @@ GoRouter createRouter(AppUserCubit appUserCubit) {
       if (appUserState is AppUserLoggedOut && !isAuth) {
         return '/login';
       }
-      
+
       return null;
     },
     routes: [
@@ -81,7 +82,16 @@ GoRouter createRouter(AppUserCubit appUserCubit) {
           final data = state.extra as Map<String, dynamic>;
           final selectedUser = data['selectedUser'];
           final messages = data['messages'];
-          return SelectedChatUserProfile(selectedUser: selectedUser,messages: messages,);
+          return SelectedChatUserProfile(
+            selectedUser: selectedUser,
+            messages: messages,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/change-password',
+        builder: (context, state) {
+          return ChangePassword();
         },
       ),
     ],

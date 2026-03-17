@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/widgets/common_icon.dart';
-import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
 class ProfileImgName extends StatefulWidget {
