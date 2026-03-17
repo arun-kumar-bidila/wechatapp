@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
-import 'package:wechat/common/widgets/loader.dart';
+
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_feature.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_img_name.dart';
@@ -30,12 +31,10 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text("Profile", style: Theme.of(context).textTheme.titleMedium),
       ),
       body: SafeArea(
-        child: BlocBuilder<AuthBloc, AuthState>(
+        child: BlocBuilder<AppUserCubit, AppUserState>(
           builder: (context, state) {
-            if (state is AuthUserLoggedOutLoading) {
-              return Loader();
-            }
-            if (state is AuthUserLoggedIn) {
+            
+            if (state is AppUserLoggedIn) {
               return Column(
                 children: [
                   ProfileImgName(),

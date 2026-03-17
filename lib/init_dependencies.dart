@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/data/datasources/auth_datasource.dart';
 import 'package:wechat/features/auth/data/repository/auth_repository_impl.dart';
@@ -44,6 +45,7 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => dio);
   serviceLocator.registerLazySingleton(() => storage);
   serviceLocator.registerLazySingleton<SocketService>(() => SocketService());
+  serviceLocator.registerLazySingleton(() => AppUserCubit());
   _initAuth();
   _initProfile();
   _initHome();
@@ -68,6 +70,7 @@ void _initAuth() {
         loginUseCase: serviceLocator(),
         checkAuthCase: serviceLocator(),
         logoutUserUsecase: serviceLocator(),
+        appUserCubit: serviceLocator()
       ),
     );
 }

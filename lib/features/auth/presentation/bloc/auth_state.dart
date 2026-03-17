@@ -12,16 +12,22 @@ final class AuthSignUpFailure extends AuthState {
   AuthSignUpFailure(this.message);
 }
 
-final class AuthUserLoggedIn extends AuthState {
+final class AuthSignUpSuccess extends AuthState {
   final User user;
-  AuthUserLoggedIn(this.user);
+  AuthSignUpSuccess(this.user);
 }
+
 
 final class AuthLoginLoading extends AuthState {}
 
 final class AuthLoginFailure extends AuthState {
   final String message;
   AuthLoginFailure(this.message);
+}
+
+final class AuthLoginSuccess extends AuthState {
+  final User user;
+  AuthLoginSuccess(this.user);
 }
 
 final class AuthCheckLoading extends AuthState {}

@@ -44,7 +44,7 @@ class _AddBioPageState extends State<AddBioPage> {
         child: Center(
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (state is AuthUserLoggedIn) {
+              if (state is AuthSignUpSuccess) {
                   showSnackabr(context, "SignUp Success");
                 
               }

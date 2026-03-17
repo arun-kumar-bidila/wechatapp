@@ -43,13 +43,11 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (state is AuthUserLoggedIn) {
+              if (state is AuthLoginSuccess) {
                 showSnackabr(context, "Login Success");
-                
               }
             },
-            buildWhen: (previous, current) =>
-                current is AuthLoginLoading || current is AuthLoginFailure,
+
             builder: (context, state) {
               if (state is AuthLoginLoading) {
                 return Loader();

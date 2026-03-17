@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/theme/app_theme.dart';
 import 'package:wechat/common/theme/theme_cubit.dart';
 import 'package:wechat/core/router/app_router.dart';
@@ -17,6 +18,7 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
         BlocProvider(create: (_) => serviceLocator<ProfileBloc>()),
         BlocProvider(create: (_) => ThemeCubit()),
@@ -40,21 +42,21 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final authBloc = serviceLocator<AuthBloc>();
-    _router = createRouter(authBloc);
+    final appUserCubit = serviceLocator<AppUserCubit>();
+    _router = createRouter(appUserCubit);
 
-    authBloc.add(AuthCheck());
+    context.read<AuthBloc>().add(AuthCheck());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
+    return BlocListener<AppUserCubit, AppUserState>(
       listener: (context, state) {
         final socketService = serviceLocator<SocketService>();
-        if (state is AuthUserLoggedIn) {
+        if (state is AppUserLoggedIn) {
           debugPrint(state.user.id);
           socketService.connect(state.user.id);
-        } else if (state is AuthUserLoggedOut) {
+        } else if (state is AppUserLoggedOut) {
           socketService.disconnect();
         }
       },

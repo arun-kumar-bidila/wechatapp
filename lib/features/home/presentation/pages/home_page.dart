@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
@@ -59,9 +60,9 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               context.push('/profile');
             },
-            child: BlocBuilder<AuthBloc, AuthState>(
+            child: BlocBuilder<AppUserCubit, AppUserState>(
               builder: (context, state) {
-                if (state is AuthUserLoggedIn) {
+                if (state is AppUserLoggedIn) {
                   return Hero(
                     tag: 'location-profile',
                     child: state.user.profilePic.isEmpty
