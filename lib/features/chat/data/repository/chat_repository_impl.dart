@@ -58,4 +58,18 @@ class ChatRepositoryImpl implements ChatRepository {
       return left(Failure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> markMessageAsSeen({
+    required String messageId,
+  }) async {
+    try {
+      final res = await chatRemoteDatasource.markMessageAsSeen(
+        messageId: messageId,
+      );
+      return right(res);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

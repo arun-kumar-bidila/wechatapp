@@ -27,10 +27,11 @@ class _ChatTileState extends State<ChatTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<HomeBloc>().add(
-          HomeResetUnseenEvent(selectedUserId: widget.user.id),
-        );
-        context.push('/personal-chat', extra: widget.user);
+        final homeBloc = context.read<HomeBloc>();
+        homeBloc.add(HomeResetUnseenEvent(selectedUserId: widget.user.id));
+        context.push('/personal-chat', extra: widget.user).then((_) {
+          homeBloc.add(HomeOnFetchAllUsers());
+        });
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -41,7 +42,7 @@ class _ChatTileState extends State<ChatTile> {
             widget.user.profilePic.isEmpty
                 ? Container(
                     padding: EdgeInsets.all(12),
-            
+
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).colorScheme.surfaceContainer,
@@ -64,7 +65,7 @@ class _ChatTileState extends State<ChatTile> {
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
-            
+
                           return ProfileSkeleton(width: 40, height: 40);
                         },
                       ),

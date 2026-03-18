@@ -11,6 +11,7 @@ import 'package:wechat/features/auth/domain/usecases/login_use_case.dart';
 import 'package:wechat/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:wechat/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/chat/domain/usecases/mark_message_as_seen_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_image_message_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_text_message_usecase.dart';
 import 'package:wechat/features/home/data/datasources/home_remote_data_source.dart';
@@ -114,12 +115,14 @@ void _initChat() {
     ..registerFactory(() => ChatMessagesFetchUsecase(serviceLocator()))
     ..registerFactory(() => SendTextMessageUsecase(serviceLocator()))
     ..registerFactory(() => SendImageMessageUsecase(serviceLocator()))
+    ..registerFactory(() => MarkMessageAsSeenUsecase(serviceLocator()))
     ..registerFactory(
       () => ChatBloc(
         chatMessagesFetchUsecase: serviceLocator(),
         sendTextMessageUsecase: serviceLocator(),
         sendImageMessageUsecase: serviceLocator(),
         socketService: serviceLocator(),
+        markMessageAsSeenUsecase: serviceLocator(),
       ),
     );
 }
