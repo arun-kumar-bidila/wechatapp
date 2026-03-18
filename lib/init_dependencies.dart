@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
+import 'package:wechat/core/utils/connection_checker.dart';
 import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/data/datasources/auth_datasource.dart';
 import 'package:wechat/features/auth/data/repository/auth_repository_impl.dart';
@@ -47,6 +49,10 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => storage);
   serviceLocator.registerLazySingleton<SocketService>(() => SocketService());
   serviceLocator.registerFactory(() => AppUserCubit());
+  serviceLocator.registerFactory(() => InternetConnection());
+  serviceLocator.registerFactory<ConnectionChecker>(
+    () => ConnectionCheckerImpl(serviceLocator()),
+  );
   _initAuth();
   _initProfile();
   _initHome();
@@ -59,7 +65,7 @@ void _initAuth() {
       () => AuthDatasourceImpl(serviceLocator(), serviceLocator()),
     )
     ..registerFactory<AuthRepository>(
-      () => AuthRepositoryImpl(serviceLocator()),
+      () => AuthRepositoryImpl(serviceLocator(),serviceLocator()),
     )
     ..registerFactory(() => SignUpUseCase(serviceLocator()))
     ..registerFactory(() => LoginUseCase(serviceLocator()))
@@ -81,7 +87,7 @@ void _initProfile() {
       () => ProfileRemoteDataSourceImpl(serviceLocator()),
     )
     ..registerFactory<ProfileRepository>(
-      () => ProfileRepositoryImpl(serviceLocator()),
+      () => ProfileRepositoryImpl(serviceLocator(),serviceLocator()),
     )
     ..registerFactory(() => UpdateUserUsecase(serviceLocator()))
     ..registerFactory(() => ProfileBloc(updateUserUsecase: serviceLocator()));

@@ -7,6 +7,7 @@ import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
 import 'package:wechat/common/widgets/loader.dart';
+import 'package:wechat/core/utils/snackbar.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -47,8 +48,12 @@ class _LoginPageState extends State<LoginPage> {
                 context.read<AppUserCubit>().updateUser(state.user);
                 // showSnackabr(context, "Login Success");
               }
+              if (state is AuthLoginFailure) {
+                showSnackabr(context, state.message);
+              }
             },
-            buildWhen: (previous, current) => current is AuthLoginFailure || current is AuthLoginLoading ,
+            buildWhen: (previous, current) =>
+                current is AuthLoginFailure || current is AuthLoginLoading,
 
             builder: (context, state) {
               if (state is AuthLoginLoading) {

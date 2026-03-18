@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
+
+import 'package:wechat/core/utils/snackbar.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -17,6 +20,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final InternetConnection internetConnection = InternetConnection();
+
   double _opacity = 0.5;
 
   void _checkFormValidity() {
@@ -35,6 +40,13 @@ class _SignUpPageState extends State<SignUpPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  Future<bool> checkInternetConnection() async {
+    if (await (internetConnection.hasInternetAccess) == true) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -83,13 +95,23 @@ class _SignUpPageState extends State<SignUpPage> {
                     duration: Duration(milliseconds: 500),
                     child: CommonButton(
                       buttonName: "Sign Up .",
-                      onTap: () {
+                      onTap: () async {
+                        if (!await checkInternetConnection()) {
+                          if (!mounted) return;
+                          showSnackabr(context, 'No Internet Access');
+                          return;
+                        }
+
+                        if (!mounted) return;
                         if (formKey.currentState!.validate()) {
-                          context.push("/add-bio",extra: {
-                            'email':emailController.text.trim(),
-                            'fullName':nameController.text.trim(),
-                            'password':passwordController.text.trim()
-                          });
+                          context.push(
+                            "/add-bio",
+                            extra: {
+                              'email': emailController.text.trim(),
+                              'fullName': nameController.text.trim(),
+                              'password': passwordController.text.trim(),
+                            },
+                          );
                         }
                       },
                     ),
