@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
+import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
@@ -18,33 +19,60 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
-  List filteredUsers = [];
+  List<User> filteredUsers = [];
+  List<String> filterCategories = ['All', 'Online', 'Offline', 'Unread'];
+  String selectedCategory = 'All';
 
   @override
   void initState() {
     super.initState();
 
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
-    _searchController.addListener(onSearchChanged);
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
   }
 
   Future<void> _refreshUsers() async {
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
   }
 
-  void onSearchChanged() {
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<User> applyFilters(HomeState state) {
+    if (state.allUsersData == null) return [];
+    List<User> users = state.allUsersData!.users;
+    // Apply category filter
+    if (selectedCategory == 'Online') {
+      users = users
+          .where((user) => state.onlineUsers.contains(user.id))
+          .toList();
+    } else if (selectedCategory == 'Offline') {
+      users = users
+          .where((user) => !state.onlineUsers.contains(user.id))
+          .toList();
+    } else if (selectedCategory == 'Unread') {
+      users = users.where((user) {
+        final unseenCount = state.allUsersData!.unseen[user.id] ?? 0;
+        return unseenCount > 0;
+      }).toList();
+    }
+
+    // Apply search filter
     final query = _searchController.text.toLowerCase();
-    final state = context.read<HomeBloc>().state;
 
-    if (state.allUsersData == null) return;
-
-    final users = state.allUsersData!.users;
-
-    setState(() {
-      filteredUsers = users.where((user) {
+    if (query.isNotEmpty) {
+      users = users.where((user) {
         return user.fullName.toLowerCase().contains(query);
       }).toList();
-    });
+    }
+    return users;
   }
 
   @override
@@ -177,6 +205,55 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              SizedBox(height: 20),
+              SizedBox(
+                height: 40,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: filterCategories.length,
+
+                        itemBuilder: (context, index) {
+                          final filterCategoryTitle = filterCategories[index];
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (selectedCategory == filterCategoryTitle) {
+                                  selectedCategory = 'All';
+                                } else {
+                                  selectedCategory = filterCategoryTitle;
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                color: selectedCategory == filterCategoryTitle
+                                    ? AppColors.appColor
+                                    : null,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: AppColors.borderColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  filterCategoryTitle,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: RefreshIndicator(
                   backgroundColor: AppColors.white,
@@ -189,9 +266,7 @@ class _HomePageState extends State<HomePage> {
                         return Loader();
                       }
                       if (state.allUsersData != null) {
-                        final users = _searchController.text.isEmpty
-                            ? state.allUsersData!.users
-                            : filteredUsers;
+                        final users = applyFilters(state);
                         return ListView.builder(
                           itemCount: users.length,
                           itemBuilder: (context, index) {
