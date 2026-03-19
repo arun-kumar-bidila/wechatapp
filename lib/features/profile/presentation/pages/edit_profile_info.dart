@@ -12,6 +12,7 @@ import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/core/utils/snackbar.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/common/widgets/profile_skeleton.dart';
 import 'package:wechat/features/profile/presentation/bloc/profile_bloc.dart';
 
 class EditProfileInfo extends StatefulWidget {
@@ -122,6 +123,42 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                         child: Image.network(
                                           state.user.profilePic,
                                           fit: BoxFit.cover,
+                                          loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+
+                                        return ProfileSkeleton(
+                                          width: 120,
+                                          height: 120,
+                                        );
+                                      },
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                return Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  padding: EdgeInsets.all(12),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .surfaceContainer,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    "assets/icons/profile.svg",
+                                                    fit: BoxFit.contain,
+                                                    colorFilter:
+                                                        ColorFilter.mode(
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .secondary,
+                                                          BlendMode.srcIn,
+                                                        ),
+                                                  ),
+                                                );
+                                              },
                                         ),
                                       ),
                                     ),

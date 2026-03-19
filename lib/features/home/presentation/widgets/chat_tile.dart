@@ -7,7 +7,7 @@ import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/features/home/domain/entity/last_message_entity.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
-import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
+import 'package:wechat/common/widgets/profile_skeleton.dart';
 
 class ChatTile extends StatefulWidget {
   final User user;
@@ -71,6 +71,26 @@ class _ChatTileState extends State<ChatTile> {
                           if (loadingProgress == null) return child;
 
                           return ProfileSkeleton(width: 40, height: 40);
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            padding: EdgeInsets.all(12),
+
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainer,
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/icons/profile.svg",
+                              width: 18,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.secondary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ),

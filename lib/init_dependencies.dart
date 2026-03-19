@@ -37,8 +37,8 @@ final serviceLocator = GetIt.instance;
 Future<void> initDependencies() async {
   final dio = Dio(
     BaseOptions(
-      // baseUrl: "https://wechat-y4je.onrender.com",
-      baseUrl: "http://192.168.0.241:5000",
+      baseUrl: "https://wechat-y4je.onrender.com",
+      // baseUrl: "http://192.168.0.241:5000",
       headers: {"Content-Type": "application/json"},
       validateStatus: (status) => true,
     ),
