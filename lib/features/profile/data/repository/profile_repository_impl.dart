@@ -4,12 +4,14 @@ import 'package:fpdart/fpdart.dart';
 import 'package:wechat/core/error/exceptions.dart';
 import 'package:wechat/core/error/failure.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/core/utils/connection_checker.dart';
 import 'package:wechat/features/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:wechat/features/profile/domain/repository/profile_repository.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSource profileRemoteDataSource;
-  ProfileRepositoryImpl(this.profileRemoteDataSource);
+  final ConnectionChecker connectionChecker;
+  ProfileRepositoryImpl(this.profileRemoteDataSource,this.connectionChecker);
   @override
   Future<Either<Failure, User>> updateUser({
     required String fullName,
@@ -17,6 +19,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
     File? image,
   }) async {
     try {
+      if (await (connectionChecker.isConnected) == false) {
+        throw ServerException("No Internet Connection");
+      }
       final res = await profileRemoteDataSource.updateUser(
         fullName: fullName,
         bio: bio,

@@ -6,6 +6,7 @@ import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/chat/data/models/message_model.dart';
 import 'package:wechat/features/chat/domain/entities/message_entity.dart';
 import 'package:wechat/features/chat/domain/usecases/chat_messages_fetch_usecase.dart';
+import 'package:wechat/features/chat/domain/usecases/mark_message_as_seen_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_image_message_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_text_message_usecase.dart';
 
@@ -17,16 +18,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final SendTextMessageUsecase _sendTextMessageUsecase;
   final SendImageMessageUsecase _sendImageMessageUsecase;
   final SocketService _socketService;
+  final MarkMessageAsSeenUsecase _markMessageAsSeenUsecase;
 
   ChatBloc({
     required ChatMessagesFetchUsecase chatMessagesFetchUsecase,
     required SendTextMessageUsecase sendTextMessageUsecase,
     required SendImageMessageUsecase sendImageMessageUsecase,
     required SocketService socketService,
+     required MarkMessageAsSeenUsecase markMessageAsSeenUsecase
   }) : _chatMessagesFetchUsecase = chatMessagesFetchUsecase,
        _sendTextMessageUsecase = sendTextMessageUsecase,
        _sendImageMessageUsecase = sendImageMessageUsecase,
        _socketService = socketService,
+       _markMessageAsSeenUsecase=markMessageAsSeenUsecase,
        super(const ChatState()) {
     _socketService.messageStreamController.stream.listen((data) {
       final message = MessageModel.fromJson(data);
@@ -106,7 +110,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   void _onSocketMessageReceived(
     ChatSocketMessageReceivedEvent event,
     Emitter<ChatState> emit,
-  ) {
+  )async {
     if (event.message.senderId != state.selectedUserId) {
       return;
     }
@@ -118,6 +122,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       ..add(event.message);
 
     emit(state.copyWith(messages: updatedMessages));
+    await _markMessageAsSeenUsecase(MarkMessageAsSeenUsecaseParams(messageId: event.message.id));
   }
 
   void _onChatInitializeEvent(

@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
+import 'package:wechat/core/utils/connection_checker.dart';
 import 'package:wechat/core/utils/socket_service.dart';
 import 'package:wechat/features/auth/data/datasources/auth_datasource.dart';
 import 'package:wechat/features/auth/data/repository/auth_repository_impl.dart';
@@ -11,6 +13,7 @@ import 'package:wechat/features/auth/domain/usecases/login_use_case.dart';
 import 'package:wechat/features/auth/domain/usecases/logout_user_usecase.dart';
 import 'package:wechat/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:wechat/features/chat/domain/usecases/mark_message_as_seen_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_image_message_usecase.dart';
 import 'package:wechat/features/chat/domain/usecases/send_text_message_usecase.dart';
 import 'package:wechat/features/home/data/datasources/home_remote_data_source.dart';
@@ -34,8 +37,8 @@ final serviceLocator = GetIt.instance;
 Future<void> initDependencies() async {
   final dio = Dio(
     BaseOptions(
-      baseUrl: "https://wechat-y4je.onrender.com",
-      // baseUrl: "http://192.168.0.241:5000",
+      // baseUrl: "https://wechat-y4je.onrender.com",
+      baseUrl: "http://192.168.0.241:5000",
       headers: {"Content-Type": "application/json"},
       validateStatus: (status) => true,
     ),
@@ -46,6 +49,10 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => storage);
   serviceLocator.registerLazySingleton<SocketService>(() => SocketService());
   serviceLocator.registerFactory(() => AppUserCubit());
+  serviceLocator.registerFactory(() => InternetConnection());
+  serviceLocator.registerFactory<ConnectionChecker>(
+    () => ConnectionCheckerImpl(serviceLocator()),
+  );
   _initAuth();
   _initProfile();
   _initHome();
@@ -58,7 +65,7 @@ void _initAuth() {
       () => AuthDatasourceImpl(serviceLocator(), serviceLocator()),
     )
     ..registerFactory<AuthRepository>(
-      () => AuthRepositoryImpl(serviceLocator()),
+      () => AuthRepositoryImpl(serviceLocator(),serviceLocator()),
     )
     ..registerFactory(() => SignUpUseCase(serviceLocator()))
     ..registerFactory(() => LoginUseCase(serviceLocator()))
@@ -80,7 +87,7 @@ void _initProfile() {
       () => ProfileRemoteDataSourceImpl(serviceLocator()),
     )
     ..registerFactory<ProfileRepository>(
-      () => ProfileRepositoryImpl(serviceLocator()),
+      () => ProfileRepositoryImpl(serviceLocator(),serviceLocator()),
     )
     ..registerFactory(() => UpdateUserUsecase(serviceLocator()))
     ..registerFactory(() => ProfileBloc(updateUserUsecase: serviceLocator()));
@@ -114,12 +121,14 @@ void _initChat() {
     ..registerFactory(() => ChatMessagesFetchUsecase(serviceLocator()))
     ..registerFactory(() => SendTextMessageUsecase(serviceLocator()))
     ..registerFactory(() => SendImageMessageUsecase(serviceLocator()))
+    ..registerFactory(() => MarkMessageAsSeenUsecase(serviceLocator()))
     ..registerFactory(
       () => ChatBloc(
         chatMessagesFetchUsecase: serviceLocator(),
         sendTextMessageUsecase: serviceLocator(),
         sendImageMessageUsecase: serviceLocator(),
         socketService: serviceLocator(),
+        markMessageAsSeenUsecase: serviceLocator(),
       ),
     );
 }

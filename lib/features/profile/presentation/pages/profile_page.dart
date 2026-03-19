@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 
 import 'package:wechat/common/widgets/common_button.dart';
-import 'package:wechat/core/utils/snackbar.dart';
 
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:wechat/features/profile/presentation/widgets/profile_feature.dart';

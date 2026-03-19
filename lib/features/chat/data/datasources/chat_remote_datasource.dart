@@ -17,6 +17,8 @@ abstract interface class ChatRemoteDatasource {
     required String selectedUserId,
     required File image,
   });
+
+  Future<bool> markMessageAsSeen({required String messageId});
 }
 
 class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
@@ -82,10 +84,24 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
 
       final data = response.data;
 
-     if (response.statusCode != 200) {
+      if (response.statusCode != 200) {
         throw ServerException(data['message']);
       }
       return MessageModel.fromJson(response.data['newMessage']);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> markMessageAsSeen({required String messageId}) async {
+    try {
+      final response = await _dio.put('/api/messages/mark/$messageId');
+      if (response.data['success']) {
+        return true;
+      } else {
+        throw ServerException('Failed to mark message');
+      }
     } catch (e) {
       throw ServerException(e.toString());
     }

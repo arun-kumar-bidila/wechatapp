@@ -14,8 +14,9 @@ abstract interface class ChatRepository {
     required String selectedUserId,
     required String message,
   });
-   Future<Either<Failure, MessageEntity>> sendImageMessage({
+  Future<Either<Failure, MessageEntity>> sendImageMessage({
     required String selectedUserId,
     required File image,
   });
+  Future<Either<Failure, bool>> markMessageAsSeen({required String messageId});
 }

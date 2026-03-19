@@ -9,6 +9,8 @@ class AppTheme {
     borderSide: BorderSide(color: color, width: 2),
   );
 
+
+//darktheme
   static final darkThemeMode = ThemeData(
     scaffoldBackgroundColor: AppColors.backgroundColor,
     brightness: Brightness.dark,
@@ -56,6 +58,11 @@ class AppTheme {
       ),
       bodySmall: TextStyle(
         fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.white,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 12,
         fontWeight: FontWeight.w400,
         color: AppColors.white,
       ),
@@ -112,6 +119,11 @@ class AppTheme {
       ),
       bodySmall: TextStyle(
         fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.black,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 12,
         fontWeight: FontWeight.w400,
         color: AppColors.black,
       ),

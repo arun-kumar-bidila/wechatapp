@@ -60,6 +60,9 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               bioController.clear();
               showSnackabr(context, 'Profile updated');
             }
+            if (state is ProfileUpdateFailure) {
+              showSnackabr(context, state.message);
+            }
           },
           builder: (context, state) {
             if (state is ProfileUptadeLoading) {

@@ -6,7 +6,6 @@ import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/widgets/common_button.dart';
 import 'package:wechat/common/widgets/common_text_field.dart';
 import 'package:wechat/common/widgets/loader.dart';
-
 import 'package:wechat/core/utils/snackbar.dart';
 
 import 'package:wechat/features/auth/presentation/bloc/auth_bloc.dart';
@@ -47,6 +46,9 @@ class _AddBioPageState extends State<AddBioPage> {
               if (state is AuthSignUpSuccess) {
                 context.read<AppUserCubit>().updateUser(state.user);
                 // showSnackabr(context, "SignUp Success");
+              }
+              if (state is AuthSignUpFailure) {
+                showSnackabr(context, state.message);
               }
             },
             buildWhen: (previous, current) =>

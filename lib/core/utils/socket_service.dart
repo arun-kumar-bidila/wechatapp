@@ -20,8 +20,8 @@ class SocketService {
     socket?.dispose();
 
     socket = IO.io(
-      "https://wechat-y4je.onrender.com",
-      // "http://192.168.0.241:5000",
+      // "https://wechat-y4je.onrender.com",
+      "http://192.168.0.241:5000",
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .setQuery({'userId': userId})
