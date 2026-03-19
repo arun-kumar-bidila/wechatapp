@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/entities/user.dart';
+import 'package:wechat/features/home/domain/entity/last_message_entity.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
 
@@ -11,11 +12,13 @@ class ChatTile extends StatefulWidget {
   final User user;
   final int unseenCount;
   final bool onlineStatus;
+  final LastMessageEntity? lastMessage;
   const ChatTile({
     super.key,
     required this.user,
     required this.unseenCount,
     required this.onlineStatus,
+    required this.lastMessage,
   });
 
   @override
@@ -76,13 +79,13 @@ class _ChatTileState extends State<ChatTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.user.fullName,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  SizedBox(height: 4),
                   Row(
                     children: [
+                      Text(
+                        widget.user.fullName,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(width: 8,),
                       Container(
                         width: 8,
                         height: 8,
@@ -93,11 +96,25 @@ class _ChatTileState extends State<ChatTile> {
                               : Colors.red,
                         ),
                       ),
-                      SizedBox(width: 4),
-                      Text(
-                        widget.onlineStatus ? "Online" : "Offline",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.done_all, color: AppColors.appColor, size: 16),
+                      SizedBox(width: 8),
+                      if (widget.lastMessage != null)
+                        Text(
+                          widget.lastMessage!.lastMessage,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      if (widget.lastMessage == null)
+                        Text(
+                          'Start conversation',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                     ],
                   ),
                 ],

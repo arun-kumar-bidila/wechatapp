@@ -6,6 +6,7 @@ import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/widgets/loader.dart';
+import 'package:wechat/features/home/domain/entity/last_message_entity.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
 import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   List<User> filteredUsers = [];
   List<String> filterCategories = ['All', 'Online', 'Offline', 'Unread'];
   String selectedCategory = 'All';
+  Map<String, LastMessageEntity> lastMessageMap = {};
 
   @override
   void initState() {
@@ -37,6 +39,18 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _refreshUsers() async {
     context.read<HomeBloc>().add(HomeOnFetchAllUsers());
+  }
+
+  void mapLastMessages(HomeState state, User appUser) {
+    lastMessageMap.clear();
+
+    for (var msg in state.allUsersData!.lastMessages) {
+      final otherUserId = msg.senderId == appUser.id
+          ? msg.receiverId
+          : msg.senderId;
+
+      lastMessageMap[otherUserId] = msg;
+    }
   }
 
   @override
@@ -267,6 +281,12 @@ class _HomePageState extends State<HomePage> {
                       }
                       if (state.allUsersData != null) {
                         final users = applyFilters(state);
+                        final appUserState = context.read<AppUserCubit>().state;
+                        if (appUserState is! AppUserLoggedIn) return SizedBox();
+
+                        final appUser = appUserState.user;
+
+                        mapLastMessages(state, appUser);
                         return ListView.builder(
                           itemCount: users.length,
                           itemBuilder: (context, index) {
@@ -276,10 +296,13 @@ class _HomePageState extends State<HomePage> {
                             final onlineStatus = state.onlineUsers.contains(
                               users[index].id,
                             );
+
+                            final  lastMessage = lastMessageMap[users[index].id] ;
                             return ChatTile(
                               user: users[index],
                               unseenCount: unseenCount,
                               onlineStatus: onlineStatus,
+                              lastMessage: lastMessage,
                             );
                           },
                         );
