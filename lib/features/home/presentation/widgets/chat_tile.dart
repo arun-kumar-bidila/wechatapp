@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/features/home/domain/entity/last_message_entity.dart';
@@ -37,7 +38,7 @@ class _ChatTileState extends State<ChatTile> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         color: AppColors.transparentColor,
 
         child: Row(
@@ -85,7 +86,7 @@ class _ChatTileState extends State<ChatTile> {
                         widget.user.fullName,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      SizedBox(width: 8,),
+                      SizedBox(width: 8),
                       Container(
                         width: 8,
                         height: 8,
@@ -121,19 +122,32 @@ class _ChatTileState extends State<ChatTile> {
               ),
             ),
             SizedBox(width: 12),
-            widget.unseenCount == 0
-                ? SizedBox()
-                : Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.appColor,
-                    ),
-                    child: Text(
-                      widget.unseenCount.toString(),
-                      style: TextStyle(color: AppColors.white, fontSize: 14),
-                    ),
+            Column(
+              children: [
+                if (widget.lastMessage != null)
+                  Text(
+                    DateFormat('hh:mm a').format(widget.lastMessage!.updatedAt),
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
+                if (widget.lastMessage == null) SizedBox(),
+                widget.unseenCount == 0
+                    ? SizedBox()
+                    : Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.appColor,
+                        ),
+                        child: Text(
+                          widget.unseenCount.toString(),
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+              ],
+            ),
           ],
         ),
       ),
