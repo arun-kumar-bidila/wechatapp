@@ -11,7 +11,7 @@ import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/core/utils/image_picker.dart';
 import 'package:wechat/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:wechat/features/chat/presentation/widgets/message_tile.dart';
-import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
+import 'package:wechat/common/widgets/profile_skeleton.dart';
 
 class PersonalChatPage extends StatefulWidget {
   final User selectedUser;
@@ -77,58 +77,82 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
         centerTitle: true,
         actions: [
           Center(
-          child: GestureDetector(
-            onTap: () {
-              context.push(
-                '/selected-user-profile',
-                extra: {
-                  'selectedUser': widget.selectedUser,
-                  'messages': context.read<ChatBloc>().state.messages,
-                },
-              );
-            },
-            child: Hero(
-              tag: 'user-profile-${widget.selectedUser.id}',
-              child: widget.selectedUser.profilePic.isEmpty
-                  ? Container(
-                      padding: EdgeInsets.all(12),
-                      margin: EdgeInsets.only(right: 16),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).colorScheme.surfaceContainer,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/icons/profile.svg",
-                        width: 18,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.secondary,
-                          BlendMode.srcIn,
+            child: GestureDetector(
+              onTap: () {
+                context.push(
+                  '/selected-user-profile',
+                  extra: {
+                    'selectedUser': widget.selectedUser,
+                    'messages': context.read<ChatBloc>().state.messages,
+                  },
+                );
+              },
+              child: Hero(
+                tag: 'user-profile-${widget.selectedUser.id}',
+                child: widget.selectedUser.profilePic.isEmpty
+                    ? Container(
+                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.only(right: 16),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).colorScheme.surfaceContainer,
                         ),
-                      ),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.only(right: 16),
-                      child: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: ClipOval(
-                          child: Image.network(
-                            widget.selectedUser.profilePic,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              }
+                        child: SvgPicture.asset(
+                          "assets/icons/profile.svg",
+                          width: 18,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.secondary,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.only(right: 16),
+                        child: SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: ClipOval(
+                            child: Image.network(
+                              widget.selectedUser.profilePic,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
 
-                              return ProfileSkeleton(width: 40, height: 40);
-                            },
+                                    return ProfileSkeleton(
+                                      width: 40,
+                                      height: 40,
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  padding: EdgeInsets.all(12),
+                                  margin: EdgeInsets.only(right: 16),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainer,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/profile.svg",
+                                    width: 18,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.secondary,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
+              ),
             ),
           ),
-        ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(8),
@@ -161,8 +185,7 @@ class _PersonalChatPageState extends State<PersonalChatPage> {
                     );
                   }
                   if (state.messages.isEmpty) {
-                    return 
-                    Align(
+                    return Align(
                       alignment: Alignment.center,
                       child: Text(
                         'Say Hello ! 👋 to ${widget.selectedUser.fullName} ',

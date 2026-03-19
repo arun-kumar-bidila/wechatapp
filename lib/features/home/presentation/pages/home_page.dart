@@ -9,7 +9,7 @@ import 'package:wechat/common/widgets/loader.dart';
 import 'package:wechat/features/home/domain/entity/last_message_entity.dart';
 import 'package:wechat/features/home/presentation/bloc/home_bloc.dart';
 import 'package:wechat/features/home/presentation/widgets/chat_tile.dart';
-import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
+import 'package:wechat/common/widgets/profile_skeleton.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -145,6 +145,28 @@ class _HomePageState extends State<HomePage> {
                                           height: 40,
                                         );
                                       },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      padding: EdgeInsets.all(12),
+                                      margin: EdgeInsets.only(left: 16),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.surfaceContainer,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        "assets/icons/profile.svg",
+                                        width: 18,
+                                        colorFilter: ColorFilter.mode(
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
@@ -221,7 +243,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 20),
               SizedBox(
-                height: 40,
+                height: 35,
                 child: Row(
                   children: [
                     Expanded(
@@ -242,22 +264,32 @@ class _HomePageState extends State<HomePage> {
                               });
                             },
                             child: Container(
+                              width: 80,
                               padding: EdgeInsets.symmetric(horizontal: 12),
-                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              margin: EdgeInsets.only(right: 12),
                               decoration: BoxDecoration(
                                 color: selectedCategory == filterCategoryTitle
                                     ? AppColors.appColor
-                                    : null,
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainer,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: AppColors.borderColor,
-                                  width: 1,
-                                ),
+                                // border: Border.all(
+                                //   color: AppColors.borderColor,
+                                //   width: 1,
+                                // ),
                               ),
                               child: Center(
                                 child: Text(
                                   filterCategoryTitle,
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(
+                                        color:
+                                            selectedCategory ==
+                                                filterCategoryTitle
+                                            ? AppColors.white
+                                            : null,
+                                      ),
                                 ),
                               ),
                             ),
@@ -268,6 +300,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              SizedBox(height: 16),
               Expanded(
                 child: RefreshIndicator(
                   backgroundColor: AppColors.white,
@@ -297,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                               users[index].id,
                             );
 
-                            final  lastMessage = lastMessageMap[users[index].id] ;
+                            final lastMessage = lastMessageMap[users[index].id];
                             return ChatTile(
                               user: users[index],
                               unseenCount: unseenCount,

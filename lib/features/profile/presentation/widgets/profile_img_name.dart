@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wechat/common/cubit/app_user/app_user_cubit.dart';
 import 'package:wechat/common/widgets/common_icon.dart';
-import 'package:wechat/features/home/presentation/widgets/profile_skeleton.dart';
+import 'package:wechat/common/widgets/profile_skeleton.dart';
 
 class ProfileImgName extends StatefulWidget {
   const ProfileImgName({super.key});
@@ -63,6 +63,27 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                                       height: 40,
                                     );
                                   },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 45,
+                                  height: 45,
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainer,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/profile.svg",
+                                    fit: BoxFit.contain,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.secondary,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -86,7 +107,7 @@ class _ProfileImgNameState extends State<ProfileImgName> {
                             ),
 
                             Text(
-                             '${user.bio} 😊' ,
+                              '${user.bio} 😊',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],

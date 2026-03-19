@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wechat/common/entities/user.dart';
 import 'package:wechat/common/theme/app_colors.dart';
 import 'package:wechat/features/chat/domain/entities/message_entity.dart';
+import 'package:wechat/common/widgets/profile_skeleton.dart';
 
 class SelectedChatUserProfile extends StatefulWidget {
   final User selectedUser;
@@ -81,6 +82,38 @@ class _SelectedChatUserProfileState extends State<SelectedChatUserProfile> {
                           child: Image.network(
                             widget.selectedUser.profilePic,
                             fit: BoxFit.cover,
+                            loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+
+                                        return ProfileSkeleton(
+                                          width: 120,
+                                          height: 120,
+                                        );
+                                      },
+                            errorBuilder: (context, error, stackTrace) {
+                             return Container(
+                                width: 60,
+                                height: 60,
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceContainer,
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/icons/profile.svg",
+                                  fit: BoxFit.contain,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.secondary,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -110,7 +143,11 @@ class _SelectedChatUserProfileState extends State<SelectedChatUserProfile> {
                 SizedBox(height: 24),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('No files yet !',style: Theme.of(context).textTheme.bodySmall,)),
+                  child: Text(
+                    'No files yet !',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
               ],
 
               GridView.builder(
